@@ -1,0 +1,33 @@
+﻿<Page
+    x:Class="ZoDream.Reader.View.ReadPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ZoDream.Reader"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton x:Name="DownloadBtn" Icon="Download" Label="下载" Click="DownloadBtn_Click"/>
+            <AppBarButton Icon="List" Label="目录"/>
+            <AppBarButton Icon="Font" Label="配色"/>
+            <AppBarButton Icon="Setting" Label="设置"/>
+            <CommandBar.SecondaryCommands>
+
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="BookName" Text="章节名"/>
+        <FlipView x:Name="ReadView" Grid.Row="1">
+        </FlipView>
+        <ProgressBar Maximum="100"/>
+    </Grid>
+</Page>

@@ -1,0 +1,25 @@
+﻿<Page
+    x:Class="ZoDream.Reader.View.WebPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ZoDream.Reader"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Icon="Home" Label="首页"/>
+            <AppBarButton Icon="Back" Label="后退"/>
+            <AppBarButton Icon="Forward" Label="前进"/>
+            <AppBarButton Icon="Refresh" Label="刷新"/>
+            <CommandBar.SecondaryCommands>
+                <AppBarToggleButton Icon="ClosedCaption" Label="无图模式"/>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+    
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <WebView x:Name="WebBrowser"/>
+    </Grid>
+</Page>
