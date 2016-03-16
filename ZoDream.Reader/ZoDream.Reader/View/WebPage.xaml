@@ -20,6 +20,6 @@
     </Page.BottomAppBar>
     
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <WebView x:Name="WebBrowser"/>
+        <WebView x:Name="WebBrowser" Source="https://www.baidu.com"/>
     </Grid>
 </Page>
