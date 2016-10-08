@@ -1,0 +1,77 @@
+<local:ListLayoutBase
+    x:Class="ZoDream.Layouts.List.ListBigVerticalCardBox"
+    x:Name="root"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ZoDream.Layouts.List"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:was_controls="using:AppStudio.Uwp.Controls"
+	xmlns:was_commands="using:AppStudio.Uwp.Commands"
+	xmlns:vm="using:ZoDream.ViewModels"
+    DataContext="{Binding RelativeSource={RelativeSource Self}}"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <Grid>
+        <was_controls:VisualBreakpoints
+            x:Name="vbp"
+            ConfigFile="/Layouts/List/Breakpoints.Medium.ListBigVerticalCardBox.json"/>
+        <was_controls:ResponsiveGridView
+            Header="{Binding Header, ElementName=root}"
+            ItemsSource="{Binding ItemsSource, ElementName=root}"            
+            ItemHeight="{Binding Active.itemsHeight, ElementName=vbp}"
+            HeaderTemplate="{Binding HeaderTemplate, ElementName=root}"
+            ItemClickCommand="{Binding ItemClickCommand, ElementName=root}"
+            OneRowModeEnabled="{Binding OneRowModeEnabled, ElementName=root}"
+            DesiredWidth="{Binding Active.itemsDesiredWidth, ElementName=vbp}"
+            was_commands:EndOfScrollCommand.Command="{Binding EndOfScrollCommand, ElementName=root}">
+            <was_controls:ResponsiveGridView.ItemTemplate>
+                <DataTemplate x:DataType="vm:ItemViewModel">
+                    <Grid
+                        VerticalAlignment="Stretch"
+                        HorizontalAlignment="Stretch"
+                        Height="{Binding Active.itemsHeight, ElementName=vbp}">
+                        <RelativePanel
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"                            
+                            Margin="{Binding Active.itemMargin, ElementName=vbp}"
+                            Background="{StaticResource BoxBackground}">
+                            <Grid
+                                x:Name="image"
+                                RelativePanel.AlignTopWithPanel="True"
+                                Height="{Binding Active.imageHeight, ElementName=vbp}"
+                                MaxHeight="{x:Bind ImageUrl, Converter={StaticResource StringToSizeConverter}, Mode=OneWay}">
+                                <was_controls:ImageEx
+                                    Stretch="UniformToFill"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Background="Transparent"
+                                    Foreground="{StaticResource BoxForeground}"
+                                    Source="{Binding ImageUrl}"/>
+                            </Grid>
+                            <RelativePanel RelativePanel.Below="image">
+                                <TextBlock
+                                    x:Name="title"
+                                    x:Phase="1"
+                                    Text="{x:Bind Title, Mode=OneWay}"
+                                    Style="{StaticResource BoxTitleStyle}"
+                                    RelativePanel.AlignTopWithPanel="True"
+                                    MaxLines="{Binding Active.titleMaxLines, ElementName=vbp}"
+                                    FontSize="{Binding Active.titleFontSize, ElementName=vbp}"
+                                    Margin="{Binding Active.leftMarginTitleBox, ElementName=vbp}"/>
+                                <TextBlock
+                                    x:Phase="1"
+                                    RelativePanel.Below="title"
+                                    Text="{x:Bind SubTitle, Mode=OneWay}"                                    
+                                    Style="{StaticResource BoxSubtitleStyle}"
+                                    FontSize="{Binding Active.subTitleFontSize, ElementName=vbp}"
+                                    Margin="{Binding Active.leftMarginSubTitleBox, ElementName=vbp}"/>
+                            </RelativePanel>
+                        </RelativePanel>
+                    </Grid>
+                </DataTemplate>
+            </was_controls:ResponsiveGridView.ItemTemplate>
+        </was_controls:ResponsiveGridView>
+    </Grid>
+</local:ListLayoutBase>

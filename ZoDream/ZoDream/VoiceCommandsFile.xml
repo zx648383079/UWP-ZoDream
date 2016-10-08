@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--UWP使用的是语音命令v1.2模板  wp8.1是v1.1 wp8是v1.0-->
+<!--等多V1.2模板详情请访问：https://msdn.microsoft.com/zh-cn/library/windows/apps/xaml/dn706593.aspx-->
+
+<!--可以创建多个 CommandSet 元素，每个都带有不同的 xml:lang 属性以使你的应用可用于不同的市场。
+    例如，用于美国的应用可能有一个英语版本的 CommandSet 和一个西班牙语版本的 CommandSet-->
+
+<!--
+      －每个CommandSet代表一种语言的语音指令，
+      －每个Command代表一种指定情景下的语音指令，每个CommandSet可以包含多种语音使用情景
+      －Example 会出现在Cortana -> App 帮助界面中，提示用户可以怎么使用该语音场景
+      －ListenFor 表示Cortana要监听的语音语法,每个命令都需要具有至少一个 ListenFor 元素
+      －Feedback 指识别语音命令成功时，Cortana将显示该元素内的内容
+      －Navigate 用于指示语音命令将在前台启动应用，如果语音命令改在后台启动应用，则指定VoiceCommandService
+      －VoiceCommandService 标签表示Cortana要启用后台应用服务来处理用户需求，
+          例： <VoiceCommandService Target="BusQueryService"/> Target填写后台应用服务的名称
+        -->
+
+
+<VoiceCommands xmlns="http://schemas.microsoft.com/voicecommands/1.2">
+  <CommandSet xml:lang="zh-cn" Name="set">
+    <AppName>小梦</AppName>
+    <Example> 打开主页 或 打开博客 </Example>
+
+    <Command Name="OpenMainPage">
+      <Example>打开主页</Example>
+      <ListenFor>打开主页</ListenFor>
+      <Feedback>正在启动ZoDream……</Feedback>
+      <Navigate  />
+    </Command>
+
+    <Command Name="QueryFlight">
+      <Example> 搜索ZoDream教程  </Example>
+      <ListenFor >[搜索]{Search}</ListenFor>
+      <Feedback> 正在搜索关于{Search}的博客 </Feedback>
+      <Navigate />
+    </Command>
+
+    <Command Name="NavToPage">
+      <Example> 跳转到某个界面  </Example>
+      <ListenFor >[跳转]到{Destination}界面</ListenFor>
+      <Feedback> 正在跳转到{Destination}界面 </Feedback>
+      <Navigate />
+    </Command>
+
+    <!--PhraseList用来定义一组语音字符，指定相应规定的字符，用来消除歧义-->
+    <!--使用 PhraseList 限制识别适用于一组相对较小的单词。当单词组过大（例如数百个单词）或者根本不应被限制时，
+        请使用 PhraseTopic 元素和 Subject 元素来优化语音识别结果的相关性，从而增强可扩展性。-->
+    <PhraseList Label="Destination">
+      <Item>博客</Item>
+      <Item>聊天室</Item>
+      <Item>设置</Item>
+      <Item>关于</Item>
+    </PhraseList>
+
+    <!--可以提高识别率，内部属性Subject可指定该关键字类型，比如 城市名 姓名  地址 等类型-->
+    <!--<PhraseTopic Label="Search" Scenario="Natural Language">
+      <Subject>City/State</Subject>
+    </PhraseTopic>-->
+  </CommandSet>
+
+  <!-- 其他语言的 CommandSet -->
+
+</VoiceCommands>

@@ -1,0 +1,23 @@
+<UserControl
+    x:Class="ZoDream.Layouts.Controls.HeroImage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"    
+    Loaded="ControlLoaded"
+    Unloaded="ControlUnloaded"
+    x:Name="root"
+	xmlns:was_controls="using:AppStudio.Uwp.Controls"
+	mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <Grid>
+        <Image
+            x:Name="image"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Center"
+            Source="{Binding Source, Mode=OneWay}"
+            Stretch="UniformToFill"
+            MinHeight="132"/>
+    </Grid>
+</UserControl>

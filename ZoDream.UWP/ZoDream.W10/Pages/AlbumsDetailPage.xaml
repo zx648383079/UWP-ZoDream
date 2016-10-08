@@ -1,0 +1,66 @@
+<Page
+    x:Class="ZoDream.Pages.AlbumsDetailPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:was_actions="using:AppStudio.Uwp.Actions"
+    xmlns:was_controls="using:AppStudio.Uwp.Controls"
+    xmlns:vm="using:ZoDream.ViewModels"
+    xmlns:layouts="using:ZoDream.Layouts.Detail"
+	xmlns:list_layouts="using:ZoDream.Layouts.List"
+    xmlns:controls="using:ZoDream.Layouts.Controls"
+    xmlns:triggers="using:ZoDream.Triggers"    
+	x:Name="root"
+    DataContext="{Binding RelativeSource={RelativeSource Self}}"
+    d:DataContext="{d:DesignData Source=/Assets/Design/DetailDesignData.json, Type=vm:DesignViewModel, IsDesignTimeCreatable=true}"
+    mc:Ignorable="d">
+
+
+	<was_controls:ShellControl.CommandBar>
+        <was_actions:ActionsCommandBar
+            x:Name="commandBar"
+            ActionsSource="{Binding SelectedItem.Actions}"
+            Style="{StaticResource WasCommandBarStyle}"
+            Background="{StaticResource AppBarBackground}"
+            Foreground="{StaticResource AppBarForeground}"
+            CommandBarOverflowPresenterStyle="{StaticResource WasCommandBarOverflowPresenter}">
+            <was_actions:ActionsCommandBar.PrimaryCommands>
+            </was_actions:ActionsCommandBar.PrimaryCommands>
+            <was_actions:ActionsCommandBar.SecondaryCommands>
+                <AppBarButton
+                    x:Uid="ShareItemButton"
+                    Icon="ReShare"
+                    Command="{Binding Source={StaticResource ActionCommands}, Path=Share}"
+                    Foreground="{StaticResource AppBarForeground}"
+                    Style="{StaticResource WasAppBarButtonStyle}"/>
+             
+                <AppBarButton
+                    x:Uid="SmallTextButton"
+                    Command="{Binding ApplyFontSizeCommand}"
+                    CommandParameter="DescriptionTextSizeSmall"
+                    Foreground="{StaticResource AppBarForeground}"
+                    Style="{StaticResource WasAppBarButtonStyle}">
+                </AppBarButton>
+                <AppBarButton
+                    x:Uid="NormalTextButton"
+                    Command="{Binding ApplyFontSizeCommand}"
+                    CommandParameter="DescriptionTextSizeNormal"
+                    Foreground="{StaticResource AppBarForeground}"
+                    Style="{StaticResource WasAppBarButtonStyle}">
+                </AppBarButton>
+                <AppBarButton
+                    x:Uid="BigTextButton"
+                    Command="{Binding ApplyFontSizeCommand}"
+                    CommandParameter="DescriptionTextSizeLarge"
+                    Foreground="{StaticResource AppBarForeground}"
+                    Style="{StaticResource WasAppBarButtonStyle}">
+                </AppBarButton>
+            </was_actions:ActionsCommandBar.SecondaryCommands>
+        </was_actions:ActionsCommandBar>
+    </was_controls:ShellControl.CommandBar>
+    
+    <Grid Background="{StaticResource AppBackground}">
+        <layouts:TextDetailLayout ViewModel="{x:Bind ViewModel}" />
+    </Grid>
+</Page>

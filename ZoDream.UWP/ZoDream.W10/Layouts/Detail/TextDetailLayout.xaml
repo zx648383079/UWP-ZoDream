@@ -1,0 +1,106 @@
+<local:BaseDetailLayout
+    x:Class="ZoDream.Layouts.Detail.TextDetailLayout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:was_controls="using:AppStudio.Uwp.Controls"
+    xmlns:local="using:ZoDream.Layouts.Detail"    
+    mc:Ignorable="d"
+    x:Name="root"
+    d:DesignHeight="1440"
+    d:DesignWidth="900">
+
+    <Grid>
+        <was_controls:VisualBreakpoints
+            x:Name="vbp"
+            ConfigFile="/Layouts/Detail/TextDetailLayout.json"/>        
+        <ScrollViewer>
+            <Grid>
+                <Grid                    
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch">
+                    <Grid.Background>
+                        <SolidColorBrush Color="#FF000000" Opacity="{Binding Active.blackShadowOpacity, ElementName=vbp, FallbackValue=0}"/>
+                    </Grid.Background>
+                </Grid>
+                <Grid x:Name="container" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="{Binding Active.cd0Width, ElementName=vbp, FallbackValue=0}"/>
+                        <ColumnDefinition Width="*" MaxWidth="1024" />
+                        <ColumnDefinition Width="{Binding Active.cd2Width, ElementName=vbp, FallbackValue=0}"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0" VerticalAlignment="Stretch">
+                        <Grid.Background>
+                            <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5" Opacity="0.1">
+                                <GradientStop Color="#00666666" Offset="0" />
+                                <GradientStop Color="#FF000000" Offset="1" />
+                            </LinearGradientBrush>
+                        </Grid.Background>
+                    </Grid>
+					<Grid Grid.Column="1" Background="{StaticResource AppBackground}">
+                                    
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid
+                            Grid.RowSpan="4"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch">
+                            <Grid.Background>
+                                <SolidColorBrush Color="#FFFFFFFF" Opacity="{Binding Active.whiteShadowOpacity, ElementName=vbp, FallbackValue=0}"/>
+                            </Grid.Background>
+                        </Grid>
+                        <Grid Width="964" VerticalAlignment="Stretch"/>
+						<StackPanel
+                            MaxHeight="{Binding ViewModel.SelectedItem.Title, Converter={StaticResource StringToSizeConverter}}">
+							<TextBlock
+								Margin="{Binding Active.titleMargin, ElementName=vbp, FallbackValue=24}"
+								Text="{Binding ViewModel.SelectedItem.Title}"
+								Style="{StaticResource DetailTitleStyle}"/>
+							<Line
+								Grid.Row="1"
+								Margin="50,12"
+								MaxWidth="520"
+								X1="0" Y1="0" X2="1" Y2="0"
+								Style="{StaticResource DetailLineStyle}" />
+						</StackPanel>
+                        <StackPanel
+                            Grid.Row="2"
+                            MaxHeight="{Binding ViewModel.SelectedItem.ImageUrl, Converter={StaticResource StringToSizeConverter}}">
+                            <Viewbox StretchDirection="DownOnly">
+                                <was_controls:ImageEx
+                                    Background="Transparent"
+                                    Foreground="{StaticResource DescriptionForeground}"
+                                    Source="{Binding ViewModel.SelectedItem.ImageUrl}"
+                                    Stretch="UniformToFill"/>
+                            </Viewbox>
+                            <Line
+                                Margin="50,12"
+                                MaxWidth="520"
+                                X1="0" Y1="0" X2="1" Y2="0"
+                                Style="{StaticResource DetailLineStyle}"/>
+                        </StackPanel>
+                        <was_controls:HtmlBlock
+                            Grid.Row="3"
+                            Margin="{Binding Active.htmlBlockMargin, ElementName=vbp, FallbackValue=24}"
+                            Style="{StaticResource HtmlStyle}"
+                            FontSize="{Binding ViewModel.FontSize, ElementName=root}"
+                            Source="{Binding ViewModel.SelectedItem.Description}"/>
+                    </Grid>
+                    <Grid Grid.Column="2" VerticalAlignment="Stretch">
+                        <Grid.Background>
+                            <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5" Opacity="0.1">
+                                <GradientStop Color="#FF000000" Offset="0" />
+                                <GradientStop Color="#00666666" Offset="1" />
+                            </LinearGradientBrush>
+                        </Grid.Background>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </ScrollViewer>        
+    </Grid>
+</local:BaseDetailLayout>

@@ -1,0 +1,27 @@
+﻿{
+  "breakpoints": [
+    {
+      "maxwidth": "694",
+      "properties": {
+        "pivoramaFitToScreen": "true",
+        "descriptionMargin": "16,12,20,12",
+        "lineMargin": "16,8,12,8",
+        "whiteShadowOpacity": "0.0",
+        "itemMargin": "0,0,0,0",
+        "darkShadowOpacity": "0.0"
+
+      }
+    },
+    {
+      "maxwidth": "*",
+      "properties": {
+        "pivoramaFitToScreen": "false",
+        "descriptionMargin": "40,12,24,12",
+        "lineMargin": "40,8,24,8",
+        "itemMargin": "16,0,45,0",
+        "whiteShadowOpacity": "0.1",
+        "darkShadowOpacity": "0.05"
+      }
+    }
+  ]
+}

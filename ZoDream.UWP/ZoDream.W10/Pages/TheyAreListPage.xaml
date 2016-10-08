@@ -1,0 +1,79 @@
+<Page
+    x:Class="ZoDream.Pages.TheyAreListPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:was_actions="using:AppStudio.Uwp.Actions"
+    xmlns:was_commands="using:AppStudio.Uwp.Commands"
+    xmlns:was_controls="using:AppStudio.Uwp.Controls"
+    xmlns:list_layouts="using:ZoDream.Layouts.List"
+    xmlns:controls="using:ZoDream.Layouts.Controls"
+    xmlns:vm="using:ZoDream.ViewModels"
+    xmlns:triggers="using:ZoDream.Triggers"
+    DataContext="{Binding RelativeSource={RelativeSource Self}}"
+    d:DataContext="{d:DesignData Source=/Assets/Design/DesignDataHtml.json, Type=vm:DesignViewModel, IsDesignTimeCreatable=true}"
+    mc:Ignorable="d">
+
+    <was_controls:ShellControl.CommandBar>
+        <was_actions:ActionsCommandBar
+            x:Name="commandBar"
+            ActionsSource="{Binding Actions}"            
+            Style="{StaticResource WasCommandBarStyle}"
+			CommandBarOverflowPresenterStyle="{StaticResource WasCommandBarOverflowPresenter}"
+            IsVisible="True"
+            Foreground="{StaticResource AppBarForeground}"            
+            Background="{StaticResource AppBarBackground}">
+			<was_actions:ActionsCommandBar.SecondaryCommands>
+                <AppBarButton
+					x:Uid="ShareItemButton"
+					Icon="ReShare"
+					Command="{Binding Source={StaticResource ActionCommands}, Path=Share}"
+					Style="{StaticResource WasAppBarButtonStyle}"/>
+            </was_actions:ActionsCommandBar.SecondaryCommands>
+		</was_actions:ActionsCommandBar>
+    </was_controls:ShellControl.CommandBar>
+
+    <Grid Background="{StaticResource AppBackground}">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		<was_controls:ErrorNotificationControl                
+			x:Uid="ListErrorNotificationControl"                
+			ErrorColor="{StaticResource DescriptionForeground}"
+			ErrorVisibility="{x:Bind ViewModel.HasLoadDataErrors, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+			Margin="10,0,18,0"/>
+		<list_layouts:HtmlSection
+            Grid.Row="1"
+            HtmlContent="{x:Bind HtmlContent, Mode=OneWay}">
+        </list_layouts:HtmlSection>	
+		<Grid
+			Grid.Row="1"
+            VerticalAlignment="Top"
+            Visibility="{x:Bind ViewModel.IsBusy, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed, Mode=OneWay}">
+            <Grid.Background>
+                <SolidColorBrush Color="{StaticResource DescriptionForegroundColor}" Opacity="0.05"/>
+            </Grid.Background>
+            <ProgressBar
+                Margin="0,24"
+                IsIndeterminate="True"
+                Foreground="{StaticResource DescriptionForeground}"/>
+        </Grid>
+		<ProgressBar
+            Grid.Row="2"
+            Margin="0,6,0,6"
+            IsIndeterminate="True"
+            Foreground="{StaticResource DescriptionForeground}"
+            Visibility="{x:Bind ViewModel.IsLoadingNextPage, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed, Mode=OneWay}"/>
+        <controls:DataUpdateInformationControl
+			Grid.Row="3"
+			Margin="8,4,8,4"
+			HorizontalAlignment="Left"
+			Color="{StaticResource DescriptionForeground}"
+			HasLocalData="{x:Bind ViewModel.HasLocalData}"
+			LastUpdateDateTime="{x:Bind ViewModel.LastUpdated, Mode=OneWay}"/>
+    </Grid>
+</Page>

@@ -1,0 +1,15 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="using:ZoDream.Layouts.Controls">
+    <DataTemplate x:Key="SectionListTitleTemplate">
+        <controls:SectionListItemHeader Title="{Binding Title}" Margin="12,0,0,0"/>
+    </DataTemplate>
+    <DataTemplate x:Key="SectionListLoadingTemplate">
+        <ProgressBar Height="3" IsIndeterminate="True" Foreground="{StaticResource DescriptionForeground}"/>
+    </DataTemplate>
+    <Style TargetType="HyperlinkButton" x:Key="SectionListHeaderLinkStyle">
+        <Setter Property="Margin" Value="0,23,22,8"/>
+        <Setter Property="Foreground" Value="{StaticResource SectionTitleForeground}"/>
+    </Style>
+</ResourceDictionary>

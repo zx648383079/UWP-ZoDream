@@ -1,0 +1,44 @@
+[
+  {
+    "MenuType": "DeepLink",
+    "Title": "twitter",
+    "Icon": "/Assets/DataImages/twitter.png",
+    "Target": "http://twitter.com",
+    "_id": "becc02be-d49c-4b14-8a8e-75f477ab85c6"
+  },
+  {
+    "MenuType": "DeepLink",
+    "Title": "facebook",
+    "Icon": "/Assets/DataImages/facebook.png",
+    "Target": "http://www.facebook.com",
+    "_id": "805dfe27-9e8d-4ad8-93cd-3db4f62687ef"
+  },
+  {
+    "MenuType": "DeepLink",
+    "Title": "my space",
+    "Icon": "/Assets/DataImages/Myspace.png",
+    "Target": "http://myspace.com",
+    "_id": "0fc3aa86-c4ae-4e86-8aef-67e8b33ddd2e"
+  },
+  {
+    "MenuType": "DeepLink",
+    "Title": "youtube",
+    "Icon": "/Assets/DataImages/Youtube.png",
+    "Target": "http://www.youtube.com",
+    "_id": "a0c0b282-c3ac-4bbc-bce8-8ae3bfa8bb0c"
+  },
+  {
+    "MenuType": "DeepLink",
+    "Title": "band camp",
+    "Icon": "/Assets/DataImages/bc.png",
+    "Target": "http://bandcamp.com",
+    "_id": "65f11af6-9355-464b-8041-fbb95d7d227b"
+  },
+  {
+    "MenuType": "DeepLink",
+    "Title": "sound cloud",
+    "Icon": "/Assets/DataImages/soudcloud.png",
+    "Target": "http://soundcloud.com",
+    "_id": "dee33e87-8341-4acb-b69e-876932210507"
+  }
+]

@@ -1,0 +1,26 @@
+﻿{
+  "breakpoints": [
+    {
+      "maxwidth": "1024",
+      "properties": {
+        "htmlBlockMargin": "24",
+        "titleMargin": "24,24,24,18",
+        "cd0Width": "0",
+        "cd2Width": "0",
+        "whiteShadowOpacity": "0",
+        "blackShadowOpacity": "0"
+      }
+    },
+    {
+      "maxwidth": "*",
+      "properties": {
+        "htmlBlockMargin": "50",
+        "titleMargin": "50,24,50,18",
+        "cd0Width": "30",
+        "cd2Width": "30",
+        "whiteShadowOpacity": "0.1",
+        "blackShadowOpacity": "0.05"
+      }
+    }
+  ]
+}
