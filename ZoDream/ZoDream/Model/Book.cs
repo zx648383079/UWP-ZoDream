@@ -18,6 +18,8 @@ namespace ZoDream.Model
 
         public int Count { get; set; }
 
+        public string Thumb { get; set; }
+
         public DateTime ReadTime { get; set; }
 
         public DateTime UpdateTime { get; set; }

@@ -134,6 +134,7 @@
     <Compile Include="Model\UrlItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
+    <Compile Include="ViewModel\BookListViewModel.cs" />
     <Compile Include="ViewModel\FriendViewModel.cs" />
     <Compile Include="ViewModel\ChatViewModel.cs" />
     <Compile Include="ViewModel\HistoryViewModel.cs" />
@@ -141,6 +142,12 @@
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\AboutkPage.xaml.cs">
       <DependentUpon>AboutkPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\BookListPage.xaml.cs">
+      <DependentUpon>BookListPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\BookReadPage.xaml.cs">
+      <DependentUpon>BookReadPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ChatPage.xaml.cs">
       <DependentUpon>ChatPage.xaml</DependentUpon>
@@ -168,7 +175,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="Win10_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Square310x310Logo.scale-200.png" />
@@ -230,6 +236,14 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="View\AboutkPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\BookListPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\BookReadPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

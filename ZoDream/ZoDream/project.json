@@ -2,9 +2,11 @@
   "dependencies": {
     "Microsoft.Bcl.Compression": "3.9.85",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
-    "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
+    "Microsoft.Toolkit.Uwp": "1.4.1",
+    "Microsoft.Toolkit.Uwp.UI": "1.4.1",
+    "Microsoft.Xaml.Behaviors.Uwp.Managed": "2.0.0",
     "MvvmLightLibs": "5.3.0",
-    "Newtonsoft.Json": "9.0.1",
+    "Newtonsoft.Json": "10.0.3",
     "PullToRefresh.UWP": "0.3.4",
     "SQLite.Net.Async-PCL": "3.1.1"
   },

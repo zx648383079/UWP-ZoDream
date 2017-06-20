@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
+using Windows.UI.Xaml.Media;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -18,7 +19,7 @@ namespace ZoDream.Layout
             this.SizeChanged += PageView_SizeChanged;
         }
 
-        private List<RichTextBlockOverflow> _blocks = new List<RichTextBlockOverflow>();
+        private List<PageItem> _blocks = new List<PageItem>();
         
 
         private void _loading(bool arg = true)
@@ -41,8 +42,13 @@ namespace ZoDream.Layout
 
         private void PageView_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            _width = e.NewSize.Width / PageCount;
-            _height = e.NewSize.Height - 20;
+            SetSize(e.NewSize.Width / PageCount, e.NewSize.Height - 20);
+        }
+
+        public void SetSize(double width, double height)
+        {
+            _width = width;
+            _height = height;
             Refresh();
         }
 
@@ -59,10 +65,9 @@ namespace ZoDream.Layout
             
             if (_blocks.Count < 1)
             {
-                RichTextBlockOverflow block = new RichTextBlockOverflow();
-                block.Width = _width;
-                block.Height = _height;
-                MainBlock.OverflowContentTarget = block;
+                var block = new PageItem(MainBlock);
+                block.SetSize(_width, _height);
+                block.SetX(_width).Index = 1;
                 _addBlock(block);
             }
             _addLast();
@@ -92,14 +97,14 @@ namespace ZoDream.Layout
             {
                 return 0;
             }
-            RichTextBlockOverflow block;
+            PageItem block;
             for (int i = 0,length = _blocks.Count; i < length; i++)
             {
                 block = _blocks[i];
-                block.Width = _width;
-                block.Height = _height;
-                block.UpdateLayout();
-                if (!block.HasOverflowContent)
+                block.SetSize(_width, _height);
+                block.SetX((i + 1) + _width);
+                block.Update();
+                if (!block.HasOver())
                 {
                     return i;
                 }
@@ -107,36 +112,46 @@ namespace ZoDream.Layout
             return -1;
         }
 
-        private RichTextBlockOverflow _createBlock(RichTextBlockOverflow target)
+        /// <summary>
+        /// 
+        /// 创建元素
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        private PageItem _createBlock(PageItem target, int index)
         {
-            var block = new RichTextBlockOverflow();
-            block.Width = _width;
-            block.Height = _height;
+            var block = new PageItem(target);
+            block.SetSize(_width, _height);
+            block.SetX((index + 1) + _width).Index = index + 2;
             _addBlock(block);
-            target.OverflowContentTarget = block;
-            block.UpdateLayout();
+            block.Update();
             return block;
         }
 
-        private void _addBlock(RichTextBlockOverflow block)
+        private void _addBlock(PageItem block)
         {
-            _blocks.Add(block);
-            Paneler.Children.Add(block);
+            _blocks.Add(block.SetBackground(Background));
+            PagerBox.Children.Add(block.Bg);
         }
 
+        /// <summary>
+        /// 从最后开始添加
+        /// </summary>
         private void _addLast()
         {
             if (_blocks.Count < 1)
             {
                 return;
             }
-            var block = _blocks[_blocks.Count - 1];
-            block.UpdateLayout();
-            var hasOver = block.HasOverflowContent;
+            var index = _blocks.Count - 1;
+            var block = _blocks[index];
+            block.Update();
+            var hasOver = block.HasOver();
             while (hasOver)
             {
-                block = _createBlock(block);
-                hasOver = block.HasOverflowContent;
+                block = _createBlock(block, index);
+                hasOver = block.HasOver();
             }
         }
 
@@ -147,7 +162,7 @@ namespace ZoDream.Layout
                 return;
             }
             _blocks.RemoveAt(index - 1);
-            Paneler.Children.RemoveAt(index);
+            PagerBox.Children.RemoveAt(index);
         }
 
 
@@ -250,8 +265,10 @@ namespace ZoDream.Layout
             Run textRun;
             foreach (string item in lines)
             {
-                textRun = new Run();
-                textRun.Text = item;
+                textRun = new Run()
+                {
+                    Text = item
+                };
                 ph.Inlines.Add(textRun);
                 ph.Inlines.Add(new LineBreak());
             }
@@ -291,7 +308,7 @@ namespace ZoDream.Layout
 
         public double LineHeight
         {
-            get { return (double)GetValue(LineHeightProperty); }
+            get { return Convert.ToDouble(GetValue(LineHeightProperty)); }
             set { SetValue(LineHeightProperty, value); }
         }
 
@@ -387,8 +404,6 @@ namespace ZoDream.Layout
         /// <param name="index"></param>
         public void Go(int index)
         {
-            Debug.WriteLine(index);
-            Debug.WriteLine(Index);
             if (index == Index)
             {
                 return;
@@ -398,18 +413,22 @@ namespace ZoDream.Layout
                 OnPreviousPage?.Invoke(this, new EventArgs());
                 return;
             }
-            GoIndex(index);
+            
             if (index >= Count)
             {
                 OnNextPage?.Invoke(this, new EventArgs());
                 return;
             }
+            GoIndex(index);
         }
 
         public void GoIndex(int index)
         {
             Index = index;
-            Scroller.ChangeView(index * _width, null, null, PageAnimation == PageAnimation.None);
+            for (int i = _blocks.Count - 1; i >= 0 ; i--)
+            {
+                _blocks[i].SetX(i < index ? 0 : (i + 1 - index) * _width);
+            }
             OnIndexChanged?.Invoke(this, new IndexEventArgs(index, Count));
             if (Index < Count - 1)
             {
@@ -433,8 +452,8 @@ namespace ZoDream.Layout
                     item.LineHeight = LineHeight;
                 }
                 item.CharacterSpacing = CharacterSpacing;
-                item.FontWeight = this.FontWeight;
-                item.Foreground = this.Foreground;
+                item.FontWeight = FontWeight;
+                item.Foreground = Foreground;
             }
             var progress = Convert.ToDouble(Index) / Convert.ToDouble(Count);
             _loadBlock();
@@ -450,7 +469,7 @@ namespace ZoDream.Layout
             MainBlock.Blocks.Clear();
             for (int i = _blocks.Count; i > 0; i--)
             {
-                Paneler.Children.RemoveAt(i);
+                PagerBox.Children.RemoveAt(i);
             }
             _blocks.Clear();
             GoIndex(0);
@@ -489,5 +508,155 @@ namespace ZoDream.Layout
         public int Index { get; private set; }
 
         public int Count { get; private set; }
+    }
+
+    public class PageItem
+    {
+        private int _index;
+
+        public int Index
+        {
+            get { return _index; }
+            set {
+                _index = value;
+                Bg.SetValue(Canvas.ZIndexProperty, _index + 1);
+            }
+        }
+
+
+
+        public Border Bg { get; set; }
+
+        public RichTextBlockOverflow Block { get; set; }
+        /// <summary>
+        /// 设置宽和高
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        public PageItem SetSize(double width, double height)
+        {
+            Block.Width = width;
+            Block.Height = height;
+            return this;
+        }
+        /// <summary>
+        /// 设置宽带
+        /// </summary>
+        /// <param name="width"></param>
+        public PageItem SetSize(double width)
+        {
+            Block.Width = width;
+            return this;
+        }
+        /// <summary>
+        /// 设置left
+        /// </summary>
+        /// <param name="x"></param>
+        public PageItem SetX(double x)
+        {
+            Bg.SetValue(Canvas.LeftProperty, x);
+            return this;
+        }
+        /// <summary>
+        /// 更新
+        /// </summary>
+        public PageItem Update()
+        {
+            Block.UpdateLayout();
+            return this;
+        }
+
+        public PageItem SetBackground(Brush color)
+        {
+            Bg.Background = color;
+            return this;
+        }
+
+        public bool HasOver()
+        {
+            return Block.HasOverflowContent;
+        }
+        /// <summary>
+        /// 把超出部分给别人
+        /// </summary>
+        /// <param name="target"></param>
+        public PageItem GetOverTarget(RichTextBlockOverflow target)
+        {
+            Block.OverflowContentTarget = target;
+            return this;
+        }
+        /// <summary>
+        /// 把超出部分给别人
+        /// </summary>
+        /// <param name="target"></param>
+        public PageItem GetOverTarget(PageItem target)
+        {
+            target.SetOverTarget(Block);
+            return this;
+        }
+        /// <summary>
+        /// 从其他获取超出内容
+        /// </summary>
+        /// <param name="target"></param>
+        public PageItem SetOverTarget(RichTextBlockOverflow target)
+        {
+            target.OverflowContentTarget = Block;
+            return this;
+        }
+
+        /// <summary>
+        /// 从其他获取超出内容
+        /// </summary>
+        /// <param name="target"></param>
+        public PageItem SetOverTarget(RichTextBlock target)
+        {
+            target.OverflowContentTarget = Block;
+            return this;
+        }
+
+        /// <summary>
+        /// 从其他获取超出内容
+        /// </summary>
+        /// <param name="target"></param>
+        public PageItem SetOverTarget(PageItem target)
+        {
+            target.GetOverTarget(Block);
+            return this;
+        }
+
+        public PageItem()
+        {
+
+        }
+
+        public PageItem(Border bg, RichTextBlockOverflow block)
+        {
+            Bg = bg;
+            Block = block;
+        }
+
+        public PageItem(RichTextBlock block)
+        {
+            Bg = new Border();
+            Block = new RichTextBlockOverflow();
+            Bg.Child = Block;
+            SetOverTarget(block);
+        }
+
+        public PageItem(RichTextBlockOverflow block)
+        {
+            Bg = new Border();
+            Block = new RichTextBlockOverflow();
+            Bg.Child = Block;
+            SetOverTarget(block);
+        }
+
+        public PageItem(PageItem block)
+        {
+            Bg = new Border();
+            Block = new RichTextBlockOverflow();
+            Bg.Child = Block;
+            SetOverTarget(block);
+        }
     }
 }

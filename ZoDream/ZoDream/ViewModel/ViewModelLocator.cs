@@ -45,6 +45,8 @@ namespace ZoDream.ViewModel
             Register<ChatViewModel>();
             Register<FriendViewModel>();
             Register<HistoryViewModel>();
+
+            Register<BookListViewModel>();
         }
         
         public MainViewModel Main => Get<MainViewModel>();
@@ -55,5 +57,7 @@ namespace ZoDream.ViewModel
         public FriendViewModel Friend => Get<FriendViewModel>();
 
         public HistoryViewModel History => Get<HistoryViewModel>();
+
+        public BookListViewModel BookList = Get<BookListViewModel>();
     }
 }

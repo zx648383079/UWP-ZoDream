@@ -16,21 +16,15 @@
     </UserControl.Resources>
 
     <Grid>
-        <ScrollViewer 
-            x:Name="Scroller"
-            VerticalScrollBarVisibility="Disabled"
-            HorizontalScrollBarVisibility="Hidden"
-            HorizontalScrollMode="Disabled"
-            >
-            <StackPanel 
-                x:Name="Paneler"
-                Orientation="Horizontal">
+        <Canvas x:Name="PagerBox">
+            <Border Canvas.ZIndex="1">
                 <RichTextBlock 
                     x:Name="MainBlock"
-                    TextWrapping="Wrap">
-                </RichTextBlock>
-            </StackPanel>
-        </ScrollViewer>
+                    TextWrapping="Wrap"
+                    
+                ></RichTextBlock>
+            </Border>
+        </Canvas>
         <ProgressRing x:Name="LoadingRing"/>
     </Grid>
 </UserControl>
