@@ -17,7 +17,7 @@
 
     <Grid>
         <Canvas x:Name="PagerBox">
-            <Border Canvas.ZIndex="1">
+            <Border x:Name="MainBg" Canvas.ZIndex="1">
                 <RichTextBlock 
                     x:Name="MainBlock"
                     TextWrapping="Wrap"

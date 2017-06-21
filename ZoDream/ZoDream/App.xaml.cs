@@ -9,6 +9,7 @@ using GalaSoft.MvvmLight.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.VoiceCommands;
 using Windows.Storage;
+using ZoDream.Helper;
 
 namespace ZoDream
 {
@@ -18,6 +19,7 @@ namespace ZoDream
         {
             InitializeComponent();
             Suspending += OnSuspending;
+            SqlHelper.CreateDatabase();
         }
 
         /// <summary>

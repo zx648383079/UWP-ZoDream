@@ -7,6 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using ZoDream.Model;
 using GalaSoft.MvvmLight.Views;
+using ZoDream.Helper;
+using ZoDream.Services;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
+using ZoDream.View;
 
 namespace ZoDream.ViewModel
 {
@@ -15,10 +20,15 @@ namespace ZoDream.ViewModel
 
         public BookListViewModel(INavigationService navigationService) : base(navigationService)
         {
-            BookList.Add(new Book()
-            {
-                Name = "12312321"
-            });
+            using (var reader = SqlHelper.ExecuteReader("SELECT * FROM Book ORDER BY ReadTime DESC")) { 
+                while (reader.Read())
+                {
+                    if (reader.HasRows)
+                    {
+                        BookList.Add(new Book(reader));
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -43,7 +53,30 @@ namespace ZoDream.ViewModel
                 Set(BookListPropertyName, ref _bookList, value);
             }
         }
-        
+
+        private RelayCommand<int> _readCommand;
+
+        /// <summary>
+        /// Gets the ReadCommand.
+        /// </summary>
+        public RelayCommand<int> ReadCommand
+        {
+            get
+            {
+                return _readCommand
+                    ?? (_readCommand = new RelayCommand<int>(ExecuteReadCommand));
+            }
+        }
+
+        private void ExecuteReadCommand(int index)
+        {
+            if (index < 0 || index >= BookList.Count) return;
+            NavigationService.NavigateTo(typeof(BookReadPage).FullName, BookList[index]);
+            //Messenger.Default.Send(new NotificationMessageAction<Book>(BookList[index], null, item =>
+            //{
+
+            //}), "book");
+        }
 
     }
 }

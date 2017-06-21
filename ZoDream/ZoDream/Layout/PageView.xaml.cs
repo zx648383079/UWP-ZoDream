@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Media;
 
@@ -92,6 +93,7 @@ namespace ZoDream.Layout
         {
             MainBlock.Width = _width;
             MainBlock.Height = _height;
+            MainBg.Background = Background;
             MainBlock.UpdateLayout();
             if (!MainBlock.HasOverflowContent)
             {
