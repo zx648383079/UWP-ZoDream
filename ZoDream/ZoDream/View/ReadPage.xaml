@@ -101,10 +101,8 @@
                     Maximum="1000" Minimum="10" SmallChange="1"/>
 
             <TextBlock Text="背景" Grid.Row="4"/>
-            <layout:ColorPicker Grid.Row="4" ChooseColor="Green" Grid.Column="1"/>
 
             <TextBlock Text="前景" Grid.Row="5"/>
-            <layout:ColorPicker ChooseColor="Black" Grid.Row="5" Grid.Column="1"/>
         </Grid>
     </Grid>
 </Page>

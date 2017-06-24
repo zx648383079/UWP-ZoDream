@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using ZoDream.Model;
 using GalaSoft.MvvmLight.Command;
 using ZoDream.View;
+using ZoDream.Helper;
 
 namespace ZoDream.ViewModel
 {
@@ -16,7 +17,18 @@ namespace ZoDream.ViewModel
     {
         public HistoryViewModel(INavigationService navigationService) : base(navigationService)
         {
-            Favorites.Add(new UrlItem("搜狗小说", "http://k.sogou.com?v=2"));
+            SqlHelper.Conn.Open();
+            using (var reader = SqlHelper.Select<FavoriteUrl>())
+            {
+                while (reader.Read())
+                {
+                    if (reader.HasRows)
+                    {
+                        Favorites.Add(new FavoriteUrl(reader));
+                    }
+                }
+            }
+            SqlHelper.Conn.Close();
         }
 
         /// <summary>
@@ -24,13 +36,13 @@ namespace ZoDream.ViewModel
         /// </summary>
         public const string FavoritesPropertyName = "Favorites";
 
-        private ObservableCollection<UrlItem> _favorites = new ObservableCollection<UrlItem>();
+        private ObservableCollection<FavoriteUrl> _favorites = new ObservableCollection<FavoriteUrl>();
 
         /// <summary>
         /// Sets and gets the Favorites property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
-        public ObservableCollection<UrlItem> Favorites
+        public ObservableCollection<FavoriteUrl> Favorites
         {
             get
             {
@@ -81,6 +93,9 @@ namespace ZoDream.ViewModel
             if (await favoriteDialog.ShowAsync() == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
             {
                 Favorites.Add(favoriteDialog.Url);
+                SqlHelper.Conn.Open();
+                favoriteDialog.Url.Save();
+                SqlHelper.Conn.Close();
             }
         }
     }

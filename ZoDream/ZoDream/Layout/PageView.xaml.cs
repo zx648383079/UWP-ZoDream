@@ -7,6 +7,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Media;
+using ZoDream.Helper;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -16,8 +17,8 @@ namespace ZoDream.Layout
     {
         public PageView()
         {
-            this.InitializeComponent();
-            this.SizeChanged += PageView_SizeChanged;
+            InitializeComponent();
+            SizeChanged += PageView_SizeChanged;
         }
 
         private List<PageItem> _blocks = new List<PageItem>();
@@ -45,7 +46,11 @@ namespace ZoDream.Layout
         {
             SetSize(e.NewSize.Width / PageCount, e.NewSize.Height - 20);
         }
-
+        /// <summary>
+        /// 更新页面尺寸
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
         public void SetSize(double width, double height)
         {
             _width = width;
@@ -249,10 +254,7 @@ namespace ZoDream.Layout
 
         public void AddHtml(string html)
         {
-            html = Regex.Replace(html, @"\<p[^\<\>]+\>([^\<\>]+)\</p\>|\<br/?\>", "$1zodream", RegexOptions.IgnoreCase);
-            html = Regex.Replace(html, @"\<(stype|script)[^\<\>]+\>[^\<\>]+\</\1>", "", RegexOptions.IgnoreCase);
-            html = Regex.Replace(html, @"\<[^\<\>]+?\>|\r|\n", "");
-            AddContent(html.Replace("zodream", "\r\n"));
+            AddContent(BookHelper.HtmlToText(html));
         }
 
 
@@ -262,7 +264,8 @@ namespace ZoDream.Layout
         /// <param name="content"></param>
         public void AddContent(string content)
         {
-            string[] lines = content.Split(Environment.NewLine.ToCharArray());
+
+            string[] lines = BookHelper.GetLines(content);
             Paragraph ph = new Paragraph();
             Run textRun;
             foreach (string item in lines)
@@ -445,6 +448,18 @@ namespace ZoDream.Layout
         public void Refresh()
         {
             _loading(true);
+            SetProperty();
+            var progress = Convert.ToDouble(Index) / Convert.ToDouble(Count);
+            _loadBlock();
+            GoIndex(Convert.ToInt32(Math.Floor(progress * Count)));
+            _loading(false);
+        }
+
+        /// <summary>
+        /// 设置属性
+        /// </summary>
+        public void SetProperty()
+        {
             foreach (var item in MainBlock.Blocks)
             {
                 item.FontFamily = FontFamily;
@@ -457,10 +472,11 @@ namespace ZoDream.Layout
                 item.FontWeight = FontWeight;
                 item.Foreground = Foreground;
             }
-            var progress = Convert.ToDouble(Index) / Convert.ToDouble(Count);
-            _loadBlock();
-            GoIndex(Convert.ToInt32(Math.Floor(progress * Count)));
-            _loading(false);
+            MainBg.Background = Background;
+            foreach (var item in _blocks)
+            {
+                item.SetBackground(Background);
+            }
         }
 
         /// <summary>

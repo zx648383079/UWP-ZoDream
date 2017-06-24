@@ -98,12 +98,18 @@ namespace ZoDream.Helper
             }
             try
             {
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
                 return Encoding.GetEncoding(charSet);
             }
             catch (Exception)
             {
                 return Encoding.UTF8;
             }
+        }
+
+        public static string GetAbsolute(string url, string relative)
+        {
+            return new Uri(new Uri(url), relative).ToString();
         }
     }
 }

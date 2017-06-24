@@ -66,7 +66,7 @@ namespace ZoDream.Layout
 
         // Using a DependencyProperty as the backing store for InputScope.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty InputScopeProperty =
-            DependencyProperty.Register("InputScope", typeof(InputScope), typeof(SearchBox), new PropertyMetadata(InputScopeNameValue.Default));
+            DependencyProperty.Register("InputScope", typeof(InputScope), typeof(SearchBox), new PropertyMetadata(InputScopeNameValue.Url));
 
 
 

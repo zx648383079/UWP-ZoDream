@@ -27,16 +27,16 @@
         <layout:PageView x:Name="Pager"
                          FontFamily="ms-appx:///Assets/方正启体简体.TTF#方正启体简体"
                          FontSize="30"
-                         Background="Green"
-                         PageCount="3"
+                         Background="#FFE9FAFF"
                          OnNextPage="Pager_OnNextPage"
                          OnPreviousPage="Pager_OnPreviousPage"
-                         OnIndexChanged="Pager_OnIndexChanged">
+                         OnIndexChanged="Pager_OnIndexChanged" Foreground="#FF555555">
         </layout:PageView>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
@@ -55,16 +55,21 @@
                 Click="RefreshBtn_Click"/>
             <Button 
                 Grid.Column="3" 
+                Content="&#xE292;"
+                x:Name="ChapterBtn"
+                Click="ChapterBtn_Click"/>
+            <Button 
+                Grid.Column="4" 
                 Content="&#xe115;"
                 x:Name="SettingBtn"
                 Click="SettingBtn_Click"/>
             <Button 
-                Grid.Column="4" 
+                Grid.Column="5" 
                 Content="&#xe112;"
                 x:Name="BackBtn"
                 Click="BackBtn_Click"/>
             <Button 
-                Grid.Column="5" 
+                Grid.Column="6" 
                 Content="&#xe111;"
                 x:Name="ForwardBtn"
                 Click="ForwardBtn_Click"/>
@@ -103,10 +108,28 @@
                     Maximum="1000" Minimum="10" SmallChange="1"/>
 
             <TextBlock Text="背景" Grid.Row="4"/>
-            <layout:ColorPicker Grid.Row="4" ChooseColor="Green" Grid.Column="1"/>
+            <Button Grid.Row="4" Grid.Column="1">
+                <Button.Flyout>
+                    <Flyout x:Name="colorFlyout">
+                        <layout:ColorPicker 
+                            Height="500"
+                            Width="500"
+                            />
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
 
             <TextBlock Text="前景" Grid.Row="5"/>
-            <layout:ColorPicker ChooseColor="Black" Grid.Row="5" Grid.Column="1"/>
+            <Button Grid.Row="5" Grid.Column="1">
+                <Button.Flyout>
+                    <Flyout x:Name="colorFlyout2">
+                        <layout:ColorPicker 
+                            Height="500"
+                            Width="500"
+                            />
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
         </Grid>
     </Grid>
 </Page>

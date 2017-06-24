@@ -16,7 +16,10 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using ZoDream.Helper;
 using ZoDream.Layout;
+using ZoDream.Model;
+using ZoDream.Services;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -196,9 +199,13 @@ namespace ZoDream.View
 
         private void WebBrowser_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
         {
-            Search.Title = Search.Source = args.Uri.AbsoluteUri;
-            LoadingRing.Visibility = StopBtn.Visibility = Visibility.Visible;
-            LoadingRing.IsActive = true;
+            if (Search != null)
+            {
+                Search.Title = Search.Source = args.Uri.AbsoluteUri;
+                LoadingRing.Visibility = StopBtn.Visibility = Visibility.Visible;
+                LoadingRing.IsActive = true;
+            }
+            
         }
 
         private void Search_OnEnter(object sender, EnterEventArgs e)
@@ -234,6 +241,36 @@ namespace ZoDream.View
             Frame root = Window.Current.Content as Frame;
             //这里参数自动装箱
             root.Navigate(typeof(HistoryPage));
+        }
+
+        private void DownLoadBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+            // 保存单页
+            _savePageAsync();
+        }
+
+        private async Task _savePageAsync()
+        {
+
+            var book = new Book()
+            {
+                Name = WebBrowser.DocumentTitle,
+                IsLocal = false,
+                Count = 1
+            };
+            var chapter = new BookChapter()
+            {
+                Name = book.Name,
+                Url = WebBrowser.Source.ToString(),
+            };
+            chapter.Content = BookHelper.HtmlToText(await GetBody());
+            SqlHelper.Conn.Open();
+            book.Save();
+            chapter.BookId = book.Id;
+            chapter.Save();
+            SqlHelper.Conn.Close();
+            Toast.ShowInfo("保存成功！");
         }
     }
 }

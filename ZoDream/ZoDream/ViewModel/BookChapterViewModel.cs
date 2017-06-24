@@ -26,8 +26,19 @@ namespace ZoDream.ViewModel
             {
                 _showBook = m;
                 Book = m.Sender as Book;
+                if (Book != null)
+                {
+                    _loadChapter();
+                }
             });
-            using (var reader = SqlHelper.ExecuteReader("SELECT Id, BookId, Name FROM Book WHERE BookId = @id ORDER BY Position ASC, Id ASC", new SqliteParameter("@id", Book.Id))) { 
+            
+        }
+
+        private void _loadChapter()
+        {
+            SqlHelper.Conn.Open();
+            using (var reader = SqlHelper.Select<BookChapter>("Id, BookId, Name, Position, Url", "WHERE BookId = @id ORDER BY Position ASC, Id ASC", new SqliteParameter("@id", Book.Id)))
+            {
                 while (reader.Read())
                 {
                     if (reader.HasRows)
@@ -36,6 +47,7 @@ namespace ZoDream.ViewModel
                     }
                 }
             }
+            SqlHelper.Conn.Close();
         }
 
         /// <summary>
@@ -101,7 +113,7 @@ namespace ZoDream.ViewModel
         private void ExecuteReadCommand(int index)
         {
             if (index < 0 || index >= ChapterList.Count) return;
-            Book.ChapterId = ChapterList[index].Id;
+            Book.LastChapter = ChapterList[index].Id;
             NavigationService.NavigateTo(typeof(BookReadPage).FullName, Book);
             //Messenger.Default.Send(new NotificationMessageAction<BookChapter>(ChapterList[index], null, item =>
             //{

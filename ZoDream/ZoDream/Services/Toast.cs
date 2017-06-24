@@ -20,7 +20,7 @@ namespace ZoDream.Services
         /// </summary>
         public static void ShowInfo(string text)
         {
-            Show(text, "ms-appx:///Assets/Toasts/Wink.png");
+            Show(text, "ms-appx:///Assets/Toasts/info.png");
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace ZoDream.Services
         /// </summary>
         public static void ShowWarning(string text)
         {
-            Show(text, "ms-appx:///Assets/Toasts/Worried.png");
+            Show(text, "ms-appx:///Assets/Toasts/warning.png");
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace ZoDream.Services
         /// <param name="text">The text.</param>
         public static void ShowError(string text)
         {
-            Show(text, "ms-appx:///Assets/Toasts/Confused.png");
+            Show(text, "ms-appx:///Assets/Toasts/confused.png");
         }
 
         /// <summary>

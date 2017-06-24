@@ -8,7 +8,9 @@ namespace ZoDream.Model
 {
     public class UrlItem
     {
-        public string Title { get; set; }
+        public int Id { get; set; }
+
+        public string Name { get; set; }
 
         public string Url { get; set; }
 
@@ -19,13 +21,13 @@ namespace ZoDream.Model
 
         public UrlItem(string title, string url)
         {
-            Title = title;
+            Name = title;
             Url = url;
         }
 
         public UrlItem(string title, Uri url)
         {
-            Title = title;
+            Name = title;
             Url = url.AbsoluteUri;
         }
     }

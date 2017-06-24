@@ -34,5 +34,15 @@ namespace ZoDream.View
             //这里参数自动装箱
             root.Navigate(typeof(BookReadPage), new Book() { Id = 1 });
         }
+
+        private void BookList_Holding(object sender, HoldingRoutedEventArgs e)
+        {
+            //FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+        }
+
+        private void BookList_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+        }
     }
 }

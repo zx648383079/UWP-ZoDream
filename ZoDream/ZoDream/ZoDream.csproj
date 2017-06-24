@@ -93,6 +93,15 @@
     <Content Include="Assets\default.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\Toasts\confused.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Toasts\info.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Toasts\warning.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\方正启体简体.TTF">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -105,18 +114,18 @@
     </Compile>
     <Compile Include="Converter\ImageConverter.cs" />
     <Compile Include="Converter\TimeConverter.cs" />
+    <Compile Include="Converter\ToggleVisibilityConverter.cs" />
     <Compile Include="Converter\VisibilityConverter.cs" />
     <Compile Include="Design\DesignDataService.cs" />
     <Compile Include="Helper\AppDataHelper.cs" />
+    <Compile Include="Helper\BookHelper.cs" />
     <Compile Include="Helper\FtpClient.cs" />
     <Compile Include="Helper\Http.cs" />
     <Compile Include="Helper\MessageHelper.cs" />
     <Compile Include="Helper\SqlHelper .cs" />
     <Compile Include="Helper\StorageHelper.cs" />
     <Compile Include="Layout\BasePage.cs" />
-    <Compile Include="Layout\ColorPicker.xaml.cs">
-      <DependentUpon>ColorPicker.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Layout\ColorPicker.cs" />
     <Compile Include="Layout\PageTitle.xaml.cs">
       <DependentUpon>PageTitle.xaml</DependentUpon>
     </Compile>
@@ -132,10 +141,13 @@
     <Compile Include="Model\Book.cs" />
     <Compile Include="Model\BookChapter.cs" />
     <Compile Include="Model\BookKinds.cs" />
+    <Compile Include="Model\BookRule.cs" />
     <Compile Include="Model\ChatItem.cs" />
     <Compile Include="Model\DataItem.cs" />
     <Compile Include="Model\DataService.cs" />
+    <Compile Include="Model\FavoriteUrl.cs" />
     <Compile Include="Model\FriendItem.cs" />
+    <Compile Include="Model\HistoryUrl.cs" />
     <Compile Include="Model\IDataService.cs" />
     <Compile Include="Model\UrlItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -209,10 +221,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Layout\ColorPicker.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Layout\PageTitle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -25,7 +25,7 @@
                                         <RowDefinition/>
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
-                                    <TextBlock Text="{Binding Title}" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
                                     <HyperlinkButton Content="{Binding Url}" Grid.Row="1"/>
                                 </Grid>
                             </DataTemplate>

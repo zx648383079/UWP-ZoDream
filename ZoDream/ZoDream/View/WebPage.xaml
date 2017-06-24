@@ -21,9 +21,10 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <WebView x:Name="WebBrowser" 
+        <WebView x:Name="WebBrowser"
                  NewWindowRequested="WebBrowser_NewWindowRequested"
                  CacheMode="BitmapCache"
+                 Source="https://www.baidu.com/"
                  NavigationStarting="WebBrowser_NavigationStarting"
                  NavigationCompleted="WebBrowser_NavigationCompleted"/>
         <ProgressRing x:Name="LoadingRing"/>
@@ -41,7 +42,6 @@
             <layout:SearchBox x:Name="Search" 
                      Grid.Column="1"
                      Title="搜索或浏览"
-                     InputScope="Url"
                      OnEnter="Search_OnEnter"
                      GotFocus="Search_GotFocus"
                      LostFocus="Search_LostFocus"/>
@@ -73,9 +73,13 @@
                     Click="RefreshBtn_Click" 
                     Content="&#xe117;"/>
             <Button 
-                Content="&#xe82d;"
+                Content="&#xE052;"
                     x:Name="ReadBtn"
                 Click="ReadBtn_Click"/>
+            <Button 
+                Content="&#xE118;"
+                    x:Name="DownLoadBtn"
+                Click="DownLoadBtn_Click"/>
         </VariableSizedWrapGrid>
     </Grid>
 </Page>

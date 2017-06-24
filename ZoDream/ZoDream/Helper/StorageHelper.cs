@@ -105,9 +105,11 @@ namespace ZoDream.Helper
 
         public static async Task<StorageFile> OpenFile(IList<string> filter)
         {
-            var openPicker = new FileOpenPicker();
-            openPicker.ViewMode = PickerViewMode.List;
-            openPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            var openPicker = new FileOpenPicker()
+            {
+                ViewMode = PickerViewMode.List,
+                SuggestedStartLocation = PickerLocationId.DocumentsLibrary
+            };
             foreach (var item in filter)
             {
                 openPicker.FileTypeFilter.Add(item);
@@ -117,17 +119,21 @@ namespace ZoDream.Helper
 
         public static async Task<IReadOnlyList<StorageFile>> OpenFiles()
         {
-            FileOpenPicker openPicker = new FileOpenPicker();
-            openPicker.ViewMode = PickerViewMode.List;
-            openPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            FileOpenPicker openPicker = new FileOpenPicker()
+            {
+                ViewMode = PickerViewMode.List,
+                SuggestedStartLocation = PickerLocationId.DocumentsLibrary
+            };
             openPicker.FileTypeFilter.Add("*");
             return await openPicker.PickMultipleFilesAsync();
         }
 
         public static async Task<StorageFolder> OpenFolder()
         {
-            var folderPicker = new FolderPicker();
-            folderPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            var folderPicker = new FolderPicker()
+            {
+                SuggestedStartLocation = PickerLocationId.DocumentsLibrary
+            };
             return await folderPicker.PickSingleFolderAsync();
         }
 
@@ -145,8 +151,10 @@ namespace ZoDream.Helper
 
         public static async Task<StorageFile> GetSaveFile()
         {
-            var savePicker = new FileSavePicker();
-            savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            var savePicker = new FileSavePicker()
+            {
+                SuggestedStartLocation = PickerLocationId.DocumentsLibrary
+            };
             // Dropdown of file types the user can save the file as
             savePicker.FileTypeChoices.Add("文本文件", new List<string>() { ".txt" });
             savePicker.FileTypeChoices.Add("网页文件", new List<string>() { ".html", ".htm", ".css", ".js", ".ts" });
@@ -165,6 +173,81 @@ namespace ZoDream.Helper
                 return false;
             }
             return await SaveFile(file, content);
+        }
+
+        public static async Task<ulong> FileSizeAsync(StorageFile file)
+        {
+
+            var size = await file.GetBasicPropertiesAsync();
+
+            return size.Size;
+
+        }
+
+        public static Encoding GetEncoding(byte[] bom)
+        {
+            // Analyze the BOM
+            if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76) return Encoding.UTF7;
+            if (bom[0] == 0xef && bom[1] == 0xbb && bom[2] == 0xbf) return Encoding.UTF8;
+            if (bom[0] == 0xff && bom[1] == 0xfe) return Encoding.Unicode; //UTF-16LE
+            if (bom[0] == 0xfe && bom[1] == 0xff) return Encoding.BigEndianUnicode; //UTF-16BE
+            if (bom[0] == 0 && bom[1] == 0 && bom[2] == 0xfe && bom[3] == 0xff) return Encoding.UTF32;
+            return Encoding.ASCII;
+        }
+
+        /// <summary>   
+        /// 取得一个文本文件流的编码方式。   
+        /// </summary>   
+        /// <param name="stream">文本文件流。</param>   
+        /// <param name="defaultEncoding">默认编码方式。当该方法无法从文件的头部取得有效的前导符时，将返回该编码方式。</param>   
+        /// <returns></returns>   
+        public static Encoding GetEncoding(byte[] bom, Encoding defaultEncoding)
+        {
+            var targetEncoding = defaultEncoding;
+            if (bom == null || bom.Length < 2) return targetEncoding;
+            if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76) return Encoding.UTF7;
+            if (bom[0] == 0xef && bom[1] == 0xbb && bom[2] == 0xbf) return Encoding.UTF8;
+            if (bom[0] == 0xff && bom[1] == 0xfe) return Encoding.Unicode; //UTF-16LE
+            if (bom[0] == 0xfe && bom[1] == 0xff) return Encoding.BigEndianUnicode; //UTF-16BE
+            if (bom[0] == 0 && bom[1] == 0 && bom[2] == 0xfe && bom[3] == 0xff) return Encoding.UTF32;
+
+            int index = 4;
+            while (index < bom.Length)
+            {
+                if (bom[index] >= 0xF0)
+                    break;
+                if (0x80 <= bom[index] && bom[index] <= 0xBF)
+                    break;
+                if (0xC0 <= bom[index] && bom[index] <= 0xDF)
+                {
+                    index++;
+                    if (0x80 <= bom[index] && bom[index] <= 0xBF)
+                        continue;
+                    break;
+                }
+                if (0xE0 > bom[index] || bom[index] > 0xEF) continue;
+                index++;
+                if (0x80 <= bom[index] && bom[index] <= 0xBF)
+                {
+                    index++;
+                    if (0x80 <= bom[index] && bom[index] <= 0xBF)
+                    {
+                        targetEncoding = Encoding.UTF8;
+                    }
+                }
+                break;
+            }
+            return targetEncoding;
+        }
+
+        public static async Task<string> GetFileTextAsync(StorageFile file)
+        {
+            IBuffer buffer = await FileIO.ReadBufferAsync(file);
+            DataReader reader = DataReader.FromBuffer(buffer);
+            byte[] fileContent = new byte[reader.UnconsumedBufferLength];
+            reader.ReadBytes(fileContent);
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            return GetEncoding(fileContent, Encoding.GetEncoding("gbk")).GetString(fileContent);
         }
     }
 }

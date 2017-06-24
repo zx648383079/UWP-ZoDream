@@ -20,7 +20,15 @@
     </Page.DataContext>
     <Page.BottomAppBar>
         <CommandBar>
-            <AppBarButton Icon="Read" Label="阅读" Click="AppBarButton_Click"/>
+            <AppBarButton Icon="Add" Label="添加" 
+                          Visibility="{Binding EditMode,Converter={StaticResource ToggleVisibilityConverter}}" 
+                          Command="{Binding AddCommand}"/>
+            <AppBarButton Icon="Edit" Label="编辑" Visibility="{Binding EditMode,Converter={StaticResource ToggleVisibilityConverter}}"
+                          Command="{Binding EditModeCommand}"/>
+            <AppBarButton Icon="Undo" Label="完成" Visibility="{Binding EditMode,Converter={StaticResource VisibilityConverter}}"
+                          Command="{Binding EditModeCommand}"/>
+            <AppBarButton Icon="Delete" Label="删除" Visibility="{Binding EditMode,Converter={StaticResource VisibilityConverter}}"
+                          Command="{Binding RemoveCommand}"/>
         </CommandBar>
     </Page.BottomAppBar>
 

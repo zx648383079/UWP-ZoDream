@@ -32,7 +32,7 @@ namespace ZoDream.View
                 args.Cancel = true;
                 return;
             }
-            _url.Title = TitleTb.Text;
+            _url.Name = TitleTb.Text;
             _url.Url = UrlTb.Text;
             //this.Hide();
         }
@@ -42,14 +42,14 @@ namespace ZoDream.View
             //this.Hide();
         }
 
-        private UrlItem _url = new UrlItem("", "http://");
+        private FavoriteUrl _url = new FavoriteUrl("", "http://");
 
-        public UrlItem Url
+        public FavoriteUrl Url
         {
             get { return _url; }
             set {
                 _url = value;
-                TitleTb.Text = _url.Title;
+                TitleTb.Text = _url.Name;
                 UrlTb.Text = _url.Url;
             }
         }

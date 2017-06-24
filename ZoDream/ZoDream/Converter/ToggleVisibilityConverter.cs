@@ -4,11 +4,11 @@ using Windows.UI.Xaml.Data;
 
 namespace ZoDream.Converter
 {
-    public class VisibilityConverter : IValueConverter
+    public class ToggleVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return (bool)value ? Visibility.Visible : Visibility.Collapsed;
+            return !(bool)value ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
