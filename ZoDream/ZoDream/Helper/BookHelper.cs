@@ -30,6 +30,11 @@ namespace ZoDream.Helper
         /// <returns></returns>
         public static async Task<List<BookChapter>> GetBookChapterAsync(string html, string baseUrl, BookRule rule)
         {
+            return await GetBookChapterAsync(html, new Uri(baseUrl), rule);
+        }
+
+        public static async Task<List<BookChapter>> GetBookChapterAsync(string html, Uri baseUrl, BookRule rule)
+        {
             var chapters = new List<BookChapter>();
             html = NarrowText(html, rule.ListStart, rule.ListEnd);
             var matches = Regex.Matches(html, @"<a[^<>]+?href=""?(?<href>[^""<>\s]+)[^<>]*>(?<title>[\s\S]+?)</a>");
@@ -44,6 +49,35 @@ namespace ZoDream.Helper
             }
             return chapters;
         }
+
+        /// <summary>
+        /// 下载直接保存不返回
+        /// </summary>
+        /// <param name="html"></param>
+        /// <param name="book"></param>
+        /// <param name="rule"></param>
+        /// <returns></returns>
+        public static async Task GetBookChapterAsync(string html, Book book, BookRule rule)
+        {
+            var i = 1;
+            html = NarrowText(html, rule.ListStart, rule.ListEnd);
+            var matches = Regex.Matches(html, @"<a[^<>]+?href=""?(?<href>[^""<>\s]+)[^<>]*>(?<title>[\s\S]+?)</a>");
+            foreach (Match match in matches)
+            {
+                var chapter = await GetChapterAsync(Http.GetAbsolute(book.Url, match.Groups["href"].Value), rule);
+                if (string.IsNullOrWhiteSpace(chapter.Name))
+                {
+                    chapter.Name = match.Groups["title"].Value;
+                }
+                chapter.BookId = book.Id;
+                chapter.Position = i;
+                chapter.Save();
+                i++;
+            }
+            book.Count = i - 1;
+            book.Save();
+        }
+
         /// <summary>
         /// 根据目录网址获取章节
         /// </summary>
@@ -56,7 +90,7 @@ namespace ZoDream.Helper
             return new BookChapter()
             {
                 Name = NarrowText(html, rule.TitleStart, rule.TitleEnd),
-                Content = NarrowText(html, rule.ContentStart, rule.ContentEnd),
+                Content = HtmlToText(NarrowText(html, rule.ContentStart, rule.ContentEnd)),
                 Url = url
             };
         }
@@ -96,6 +130,47 @@ namespace ZoDream.Helper
             }
 
             return chapters;
+        }
+
+        /// <summary>
+        /// 直接保存不返回
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="book"></param>
+        /// <returns></returns>
+        public static async Task GetBookChapterAsync(StorageFile file, Book book)
+        {
+            var content = await StorageHelper.GetFileTextAsync(file);
+            GetBookChapter(GetLines(content), book);
+        }
+
+        /// <summary>
+        /// 直接保存不返回
+        /// </summary>
+        /// <param name="lines"></param>
+        /// <param name="book"></param>
+        public static void GetBookChapter(IList<string> lines, Book book)
+        {
+            var index = _getChapterTitle(lines);
+            int start;
+            var position = 1;
+            BookChapter chapter;
+            while (index >= 0)
+            {
+                start = index;
+                index = _getChapterTitle(index + 1, lines);
+                chapter = new BookChapter()
+                {
+                    Name = lines[start],
+                    Position = position,
+                    Content = _getChapterContent(lines, start, index - 1),
+                    BookId = book.Id
+                };
+                chapter.Save();
+                position++;
+            }
+            book.Count = position - 1;
+            book.Save();
         }
 
         private static string _getChapterContent(IList<string> lines, int start, int end)
@@ -232,17 +307,53 @@ namespace ZoDream.Helper
                 return null;
             }
             var book = GetBook(file);
-            var chapters = await GetBookChapterAsync(file);
             SqlHelper.Conn.Open();
-            book.Count = chapters.Count;
             book.Save();
-            foreach (var chapter in chapters)
-            {
-                chapter.BookId = book.Id;
-                chapter.Save();
-            }
+            await GetBookChapterAsync(file, book);
             SqlHelper.Conn.Close();
             return book;
+        }
+
+        /// <summary>
+        /// 下载并保存
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public static async Task<Book> OpenAsync(Uri url)
+        {
+            SqlHelper.Conn.Open();
+            var rule = GetBookRule(url.Host);
+            if (rule == null)
+            {
+                SqlHelper.Conn.Close();
+                return null;
+            }
+            var html = await Http.Get(url);
+            var book = GetBook(html, rule);
+            book.IsLocal = false;
+            book.Url = url.AbsoluteUri;
+            book.Save();
+            await GetBookChapterAsync(html, book, rule);
+            SqlHelper.Conn.Close();
+            return book;
+        }
+
+        public static async Task<Book> OpenAsync(string url)
+        {
+            return await OpenAsync(new Uri(url));
+        }
+
+        public static BookRule GetBookRule(string host)
+        {
+            using (var reader = SqlHelper.Select<BookRule>("WHERE Host = @host LIMIT 1", new SqliteParameter("@host", host)))
+            {
+                reader.Read();
+                if (reader.HasRows)
+                {
+                    return new BookRule(reader);
+                }
+            }
+            return null;
         }
 
         /// <summary>

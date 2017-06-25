@@ -109,7 +109,12 @@ namespace ZoDream.Helper
 
         public static string GetAbsolute(string url, string relative)
         {
-            return new Uri(new Uri(url), relative).ToString();
+            return GetAbsolute(new Uri(url), relative);
+        }
+
+        public static string GetAbsolute(Uri url, string relative)
+        {
+            return new Uri(url, relative).ToString();
         }
     }
 }

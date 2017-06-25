@@ -17,7 +17,8 @@
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>Win10_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>ZoDream_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>876F23C662029A42BCD76E16CE0A481732DEA0E8</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -107,6 +108,7 @@
     </Content>
     <None Include="project.json" />
     <None Include="ZoDream.pfx" />
+    <None Include="ZoDream_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
@@ -189,6 +191,9 @@
     </Compile>
     <Compile Include="View\HistoryPage.xaml.cs">
       <DependentUpon>HistoryPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\QrPage.xaml.cs">
+      <DependentUpon>QrPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ReadPage.xaml.cs">
       <DependentUpon>ReadPage.xaml</DependentUpon>
@@ -295,6 +300,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\HistoryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\QrPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

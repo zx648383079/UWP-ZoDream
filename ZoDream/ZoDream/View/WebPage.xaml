@@ -22,9 +22,8 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <WebView x:Name="WebBrowser"
-                 NewWindowRequested="WebBrowser_NewWindowRequested"
-                 CacheMode="BitmapCache"
                  Source="https://www.baidu.com/"
+                 NewWindowRequested="WebBrowser_NewWindowRequested"
                  NavigationStarting="WebBrowser_NavigationStarting"
                  NavigationCompleted="WebBrowser_NavigationCompleted"/>
         <ProgressRing x:Name="LoadingRing"/>
@@ -80,6 +79,10 @@
                 Content="&#xE118;"
                     x:Name="DownLoadBtn"
                 Click="DownLoadBtn_Click"/>
+            <Button 
+                Content="&#xE156;"
+                    x:Name="ScanBtn"
+                Click="ScanBtn_Click"/>
         </VariableSizedWrapGrid>
     </Grid>
 </Page>

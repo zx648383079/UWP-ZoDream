@@ -33,6 +33,8 @@ namespace ZoDream.Model
 
         public int LastChapter { get; set; }
 
+        public string Url { get; set; }
+
         public DateTime ReadTime { get; set; }
 
         public DateTime UpdateTime { get; set; }
@@ -103,19 +105,23 @@ namespace ZoDream.Model
                     "`Name` = @name",
                     "`Index` = @index",
                     "`Count` = @count",
-                    "`LastChapter` = @chapter"
+                    "`LastChapter` = @chapter",
+                    "`Url` = @url"
                 }, Id, 
                 new SqliteParameter("@name", Name), 
                 new SqliteParameter("@index", Index), 
                 new SqliteParameter("@count", Count),
-                new SqliteParameter("@chapter", LastChapter));
+                new SqliteParameter("@chapter", LastChapter),
+                new SqliteParameter("@url", Url));
             } else
             {
                 
-                Id = SqlHelper.InsertId<Book>("`Name`, `Index`, `Count`, `LastChapter`", "@name, @index, @count, @chapter", new SqliteParameter("@name", Name),
-                new SqliteParameter("@index", Index),
-                new SqliteParameter("@count", Count),
-                new SqliteParameter("@chapter", LastChapter));
+                Id = SqlHelper.InsertId<Book>("`Name`, `Index`, `Count`, `LastChapter`, `Url`", "@name, @index, @count, @chapter, @url", 
+                    new SqliteParameter("@name", Name),
+                    new SqliteParameter("@index", Index),
+                    new SqliteParameter("@count", Count),
+                    new SqliteParameter("@chapter", LastChapter),
+                    new SqliteParameter("@url", Url));
             }
         }
 
@@ -142,6 +148,30 @@ namespace ZoDream.Model
             if (!reader.IsDBNull(6))
             {
                 UpdateTime = reader.GetDateTime(6);
+            }
+            if (!reader.IsDBNull(7))
+            {
+                LastChapter = reader.GetInt32(7);
+            }
+            if (!reader.IsDBNull(8))
+            {
+                Author = reader.GetString(8);
+            }
+            if (!reader.IsDBNull(9))
+            {
+                Description = reader.GetString(9);
+            }
+            if (!reader.IsDBNull(10))
+            {
+                Kind = (BookKinds)Enum.Parse(typeof(BookKinds), reader.GetString(10));
+            }
+            if (!reader.IsDBNull(11))
+            {
+                IsLocal = reader.GetBoolean(11);
+            }
+            if (!reader.IsDBNull(12))
+            {
+                Url = reader.GetString(12);
             }
         }
     }

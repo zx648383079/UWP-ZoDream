@@ -101,7 +101,8 @@ namespace ZoDream.View
             if (WebBrowser.CanGoForward)
             {
                 WebBrowser.GoForward();
-            } else
+            }
+            else
             {
                 WebBrowser.Refresh();
             }
@@ -131,8 +132,8 @@ namespace ZoDream.View
                 Search.Source = string.Empty;
                 Search.Title = "网址错误！";
             }
-            
-            
+
+
         }
 
         public string GetUrl(string arg)
@@ -153,7 +154,7 @@ namespace ZoDream.View
                     return arg;
             }
         }
-       
+
 
         private void WebBrowser_NewWindowRequested(WebView sender, WebViewNewWindowRequestedEventArgs args)
         {
@@ -205,7 +206,7 @@ namespace ZoDream.View
                 LoadingRing.Visibility = StopBtn.Visibility = Visibility.Visible;
                 LoadingRing.IsActive = true;
             }
-            
+
         }
 
         private void Search_OnEnter(object sender, EnterEventArgs e)
@@ -252,12 +253,18 @@ namespace ZoDream.View
 
         private async Task _savePageAsync()
         {
-
-            var book = new Book()
+            var book = await BookHelper.OpenAsync(WebBrowser.Source);
+            if (book != null)
+            {
+                Toast.ShowInfo($"下载成功！共下载了 {book.Count} 章");
+                return;
+            }
+            book = new Book()
             {
                 Name = WebBrowser.DocumentTitle,
                 IsLocal = false,
-                Count = 1
+                Count = 1,
+                Url = WebBrowser.Source.AbsoluteUri
             };
             var chapter = new BookChapter()
             {
@@ -270,7 +277,14 @@ namespace ZoDream.View
             chapter.BookId = book.Id;
             chapter.Save();
             SqlHelper.Conn.Close();
-            Toast.ShowInfo("保存成功！");
+            Toast.ShowInfo("页面保存成功！");
+        }
+
+        private void ScanBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Frame root = Window.Current.Content as Frame;
+            //这里参数自动装箱
+            root.Navigate(typeof(QrPage));
         }
     }
 }

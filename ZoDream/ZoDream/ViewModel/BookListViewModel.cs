@@ -21,7 +21,7 @@ namespace ZoDream.ViewModel
         public BookListViewModel(INavigationService navigationService) : base(navigationService)
         {
             SqlHelper.Conn.Open();
-            using (var reader = SqlHelper.Select<Book>("*", "ORDER BY ReadTime DESC")) { 
+            using (var reader = SqlHelper.Select<Book>("ORDER BY ReadTime DESC")) { 
                 while (reader.Read())
                 {
                     if (reader.HasRows)

@@ -49,7 +49,8 @@ namespace ZoDream.Helper
                 "`Author` VARCHAR(40)",
                 "`Description` VARCHAR(200)",
                 "`Kind` VARCHAR(20)",
-                "`IsLocal` BOOL"
+                "`IsLocal` BOOL",
+                "`Url` VARCHAR(200)"
             });
             CreateTable<BookChapter>(new string[] {
                 "`BookId` INT NOT NULL",
@@ -66,6 +67,23 @@ namespace ZoDream.Helper
                 "`Name`VARCHAR(200) NOT NULL",
                 "`Url`VARCHAR(200) NOT NULL",
                 "`CreateTime` DATETIME",
+            });
+            CreateTable<BookRule>(new string[] {
+                "`Host`VARCHAR(200) NOT NULL",
+                "`NameStart`VARCHAR(200)",
+                "`NameEnd`VARCHAR(200)",
+                "`AuthorStart`VARCHAR(200)",
+                "`AuthorEnd`VARCHAR(200)",
+                "`CoverStart`VARCHAR(200)",
+                "`CoverEnd`VARCHAR(200)",
+                "`DescriptionStart`VARCHAR(200)",
+                "`DescriptionEnd`VARCHAR(200)",
+                "`ListStart`VARCHAR(200)",
+                "`ListEnd`VARCHAR(200)",
+                "`TitleStart`VARCHAR(200)",
+                "`TitleEnd`VARCHAR(200)",
+                "`ContentStart`VARCHAR(200)",
+                "`ContentEnd`VARCHAR(200)",
             });
             Conn.Close();
         }
@@ -323,10 +341,10 @@ namespace ZoDream.Helper
             return Delete<T>($"Id = {id}");
         }
 
-        public static SqliteDataReader Select<T>(string feild = "*", string sql = "", params SqliteParameter[] parameters)
+        public static SqliteDataReader Select<T>(string field, string sql, params SqliteParameter[] parameters)
         {
             var table = typeof(T).Name;
-            return CreateCommand($"SELECT {feild} FROM {table} {sql};", parameters).ExecuteReader();
+            return CreateCommand($"SELECT {field} FROM {table} {sql};", parameters).ExecuteReader();
         }
 
         public static SqliteDataReader Select<T>(string sql, params SqliteParameter[] parameters)
@@ -337,6 +355,11 @@ namespace ZoDream.Helper
         public static SqliteDataReader Select<T>(int id)
         {
             return Select<T>($"WHERE Id = {id} LIMIT 1");
+        }
+
+        public static SqliteDataReader Select<T>()
+        {
+            return Select<T>("");
         }
 
         /// <summary>
