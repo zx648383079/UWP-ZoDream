@@ -22,7 +22,6 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <WebView x:Name="WebBrowser"
-                 Source="https://www.baidu.com/"
                  NewWindowRequested="WebBrowser_NewWindowRequested"
                  NavigationStarting="WebBrowser_NavigationStarting"
                  NavigationCompleted="WebBrowser_NavigationCompleted"/>
@@ -79,6 +78,10 @@
                 Content="&#xE118;"
                     x:Name="DownLoadBtn"
                 Click="DownLoadBtn_Click"/>
+            <Button 
+                Content="&#xE1C2;"
+                    x:Name="AddRuleBtn"
+                Click="AddRuleBtn_Click"/>
             <Button 
                 Content="&#xE156;"
                     x:Name="ScanBtn"

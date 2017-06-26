@@ -49,6 +49,7 @@ namespace ZoDream.ViewModel
 
             Register<BookListViewModel>();
             Register<BookChapterViewModel>();
+            Register<BookRuleViewModel>();
         }
         
         public MainViewModel Main => Get<MainViewModel>();
@@ -63,5 +64,7 @@ namespace ZoDream.ViewModel
         public BookListViewModel Book => Get<BookListViewModel>();
 
         public BookChapterViewModel BookChapter => Get<BookChapterViewModel>();
+
+        public BookRuleViewModel BookRule => Get<BookRuleViewModel>();
     }
 }

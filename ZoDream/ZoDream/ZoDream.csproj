@@ -160,6 +160,7 @@
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\BookChapterViewModel.cs" />
     <Compile Include="ViewModel\BookListViewModel.cs" />
+    <Compile Include="ViewModel\BookRuleViewModel.cs" />
     <Compile Include="ViewModel\FriendViewModel.cs" />
     <Compile Include="ViewModel\ChatViewModel.cs" />
     <Compile Include="ViewModel\HistoryViewModel.cs" />
@@ -176,6 +177,9 @@
     </Compile>
     <Compile Include="View\BookReadPage.xaml.cs">
       <DependentUpon>BookReadPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\BookRulePage.xaml.cs">
+      <DependentUpon>BookRulePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ChatPage.xaml.cs">
       <DependentUpon>ChatPage.xaml</DependentUpon>
@@ -262,6 +266,11 @@
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
+    <Page Include="Skin\RuleSkin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
     <Page Include="Skin\WebSkin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -280,6 +289,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\BookReadPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\BookRulePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

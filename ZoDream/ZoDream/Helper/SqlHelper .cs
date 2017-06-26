@@ -362,6 +362,24 @@ namespace ZoDream.Helper
             return Select<T>("");
         }
 
+        public static T First<T>(string field, string where, params SqliteParameter[] parameters)
+        {
+            using (var reader = Select<T>(field, $"WHERE {where}  LIMIT 1", parameters))
+            {
+                reader.Read();
+                if (reader.HasRows)
+                {
+                    return (T)Activator.CreateInstance(typeof(T), reader);
+                }
+            }
+            return default(T);
+        }
+
+        public static T First<T>( string where, params SqliteParameter[] parameters)
+        {
+            return First<T>("*", where, parameters);
+        }
+
         /// <summary>
         /// 获取第一行第一列的值
         /// </summary>

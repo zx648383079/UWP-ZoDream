@@ -286,5 +286,12 @@ namespace ZoDream.View
             //这里参数自动装箱
             root.Navigate(typeof(QrPage));
         }
+
+        private void AddRuleBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Frame root = Window.Current.Content as Frame;
+            //这里参数自动装箱
+            root.Navigate(typeof(BookRulePage));
+        }
     }
 }
