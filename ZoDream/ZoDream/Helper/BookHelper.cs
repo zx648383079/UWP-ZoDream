@@ -202,6 +202,10 @@ namespace ZoDream.Helper
         private static int _getChapterTitle(int index, IList<string> lines) {
             var length = lines.Count;
             var count = 0;
+            var lineScore = 0;
+            var lineIndex = -1;
+            int lineLength;
+            int score;
             for (; index < length; index++)
             {
                 var line = lines[index];
@@ -209,9 +213,9 @@ namespace ZoDream.Helper
                 {
                     continue;
                 }
-                var lineLength = line.Length;
+                lineLength = line.Length;
                 count += lineLength;
-                if (count < 500 || lineLength > 50)
+                if (count < 500 || lineLength > 40)
                 {
                     continue;
                 }
@@ -219,16 +223,20 @@ namespace ZoDream.Helper
                 {
                     return index;
                 }
-                if (count > 10000 && Regex.IsMatch(line, @"^\S{2,}"))
-                {
-                    return index;
+                score = 10 - Math.Abs(count - 10000) / 1000 + 5 * Math.Abs(20 - lineLength);
+                if (line.IndexOf("“") >= 0 || line.IndexOf("‘") >= 0 || line.IndexOf("：") >= 0) {
+                    score -= 5;
                 }
-                if (count > 20000)
+                if (score > lineScore) {
+                    lineScore = score;
+                    lineIndex = index;
+                }
+                if (count >= 20000)
                 {
-                    return index;
+                    break;
                 }
             }
-            return -1;
+            return lineIndex;
         }
 
         private static int _getChapterTitle(IList<string> lines)
@@ -282,6 +290,14 @@ namespace ZoDream.Helper
         /// <returns></returns>
         public static string NarrowText(string content, string begin, string end)
         {
+            if (string.IsNullOrWhiteSpace(begin)) {
+                var match = Regex.Match(content, end, RegexOptions.IgnoreCase);
+                return match.Groups[1].Value;
+            }
+            if (string.IsNullOrWhiteSpace(end)) {
+                var match = Regex.Match(content, begin, RegexOptions.IgnoreCase);
+                return match.Groups['content'].Value;
+            }
             var index = content.IndexOf(begin, StringComparison.Ordinal);
             if (index < 0)
             {
