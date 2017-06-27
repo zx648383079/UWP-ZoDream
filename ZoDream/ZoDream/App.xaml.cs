@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.VoiceCommands;
 using Windows.Storage;
 using ZoDream.Helper;
+using Windows.UI.Core;
 
 namespace ZoDream
 {
@@ -19,7 +20,7 @@ namespace ZoDream
         {
             InitializeComponent();
             Suspending += OnSuspending;
-            SqlHelper.CreateDatabase();
+            SqlHelper.CreateDatabaseAsync();
         }
 
         /// <summary>
@@ -55,6 +56,12 @@ namespace ZoDream
 
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
+                SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
+
+                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
+                    rootFrame.CanGoBack ?
+                    AppViewBackButtonVisibility.Visible :
+                    AppViewBackButtonVisibility.Collapsed;
             }
 
             if (rootFrame.Content == null)
@@ -71,6 +78,19 @@ namespace ZoDream
             Messenger.Default.Register<NotificationMessageAction<string>>(
                 this,
                 HandleNotificationMessage);
+        }
+
+        private void OnBackRequested(object sender, BackRequestedEventArgs e)
+        {
+
+            if (Window.Current.Content is Frame rootFrame)
+            {
+                if (rootFrame.CanGoBack)
+                {
+                    e.Handled = true;
+                    rootFrame.GoBack();
+                }
+            }
         }
 
         private void HandleNotificationMessage(NotificationMessageAction<string> message)

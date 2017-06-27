@@ -34,6 +34,7 @@ namespace ZoDream.View
         public BookReadPage()
         {
             InitializeComponent();
+            NavigationCacheMode = NavigationCacheMode.Enabled;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

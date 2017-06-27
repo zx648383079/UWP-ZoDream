@@ -222,6 +222,10 @@ namespace ZoDream.View
 
         private void RefreshBtn_Click(object sender, RoutedEventArgs e)
         {
+            if (WebBrowser.Source == null)
+            {
+                return;
+            }
             WebBrowser.Refresh();
         }
 
@@ -232,6 +236,10 @@ namespace ZoDream.View
 
         private void ReadBtn_Click(object sender, RoutedEventArgs e)
         {
+            if (WebBrowser.Source == null)
+            {
+                return;
+            }
             Frame root = Window.Current.Content as Frame;
             //这里参数自动装箱
             root.Navigate(typeof(ReadPage), WebBrowser.Source);
@@ -246,7 +254,10 @@ namespace ZoDream.View
 
         private void DownLoadBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            if (WebBrowser.Source == null)
+            {
+                return;
+            }
             // 保存单页
             _savePageAsync();
         }

@@ -35,10 +35,10 @@ namespace ZoDream.Helper
             set { _conn = value; }
         }
 
-        public static void CreateDatabase()
+        public static async Task CreateDatabaseAsync()
         {
-            Conn.Open();
-            CreateTable<Book>(new string[]{
+            await Conn.OpenAsync();
+            await CreateTableAsync<Book>(new string[]{
                 "`Name`	VARCHAR(200) NOT NULL",
                 "`Index`	INTEGER DEFAULT 0",
                 "`Count`	INTEGER DEFAULT 0",
@@ -52,23 +52,23 @@ namespace ZoDream.Helper
                 "`IsLocal` BOOL",
                 "`Url` VARCHAR(200)"
             });
-            CreateTable<BookChapter>(new string[] {
+            await CreateTableAsync<BookChapter>(new string[] {
                 "`BookId` INT NOT NULL",
                 "`Name`VARCHAR(200) NOT NULL",
                 "`Content` TEXT",
                 "`Position` INT(6) DEFAULT 99",
                 "`Url` VARCHAR(200)"
             });
-            CreateTable<FavoriteUrl>(new string[] {
+            await CreateTableAsync<FavoriteUrl>(new string[] {
                 "`Name`VARCHAR(200) NOT NULL",
                 "`Url`VARCHAR(200) NOT NULL",
             });
-            CreateTable<HistoryUrl>(new string[] {
+            await CreateTableAsync<HistoryUrl>(new string[] {
                 "`Name`VARCHAR(200) NOT NULL",
                 "`Url`VARCHAR(200) NOT NULL",
                 "`CreateTime` DATETIME",
             });
-            CreateTable<BookRule>(new string[] {
+            await CreateTableAsync<BookRule>(new string[] {
                 "`Host`VARCHAR(200) NOT NULL",
                 "`NameStart`VARCHAR(200)",
                 "`NameEnd`VARCHAR(200)",
@@ -229,15 +229,15 @@ namespace ZoDream.Helper
             }
         }
 
-        public static int CreateTable<T>(string sql)
+        public static async Task<int> CreateTableAsync<T>(string sql)
         {
             var table = typeof(T).Name;
-            return CreateCommand($"CREATE TABLE IF NOT EXISTS `{table}` (`Id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, {sql});" ).ExecuteNonQuery();
+            return await CreateCommand($"CREATE TABLE IF NOT EXISTS `{table}` (`Id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, {sql});").ExecuteNonQueryAsync();
         }
 
-        public static int CreateTable<T>(IList<string> args)
+        public static async Task<int> CreateTableAsync<T>(IList<string> args)
         {
-            return CreateTable<T>(string.Join(", ", args));
+            return await CreateTableAsync<T>(string.Join(", ", args));
         }
 
         /// <summary>
@@ -265,7 +265,8 @@ namespace ZoDream.Helper
         public static int InsertId<T>(string columns, string tags, params SqliteParameter[] parameters)
         {
             var table = typeof(T).Name;
-            return Convert.ToInt32(CreateCommand($"INSERT INTO {table} ({columns}) VALUES ({tags});select last_insert_rowid();", parameters).ExecuteScalar());
+            var id = CreateCommand($"INSERT INTO {table} ({columns}) VALUES ({tags});select last_insert_rowid();", parameters).ExecuteScalar();
+            return Convert.ToInt32(id);
         }
 
         public static int Insert<T>(string tags, params SqliteParameter[] parameters)

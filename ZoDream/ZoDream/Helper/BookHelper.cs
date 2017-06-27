@@ -292,11 +292,11 @@ namespace ZoDream.Helper
         {
             if (string.IsNullOrWhiteSpace(begin)) {
                 var match = Regex.Match(content, end, RegexOptions.IgnoreCase);
-                return match.Groups[1].Value;
+                return match.Groups[match.Groups.Count - 1].Value;
             }
             if (string.IsNullOrWhiteSpace(end)) {
                 var match = Regex.Match(content, begin, RegexOptions.IgnoreCase);
-                return match.Groups['content'].Value;
+                return match.Groups[1].Value;
             }
             var index = content.IndexOf(begin, StringComparison.Ordinal);
             if (index < 0)
@@ -323,7 +323,7 @@ namespace ZoDream.Helper
                 return null;
             }
             var book = GetBook(file);
-            SqlHelper.Conn.Open();
+            await SqlHelper.Conn.OpenAsync();
             book.Save();
             await GetBookChapterAsync(file, book);
             SqlHelper.Conn.Close();
