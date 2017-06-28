@@ -1,0 +1,10 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ZoDreamToolkit">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///ZoDreamToolkit/themes/ColorPicker.Xaml"/>
+        <ResourceDictionary Source="ms-appx:///ZoDreamToolkit/themes/NumericUpDown.Xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+</ResourceDictionary>

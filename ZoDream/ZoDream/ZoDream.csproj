@@ -127,7 +127,6 @@
     <Compile Include="Helper\SqlHelper .cs" />
     <Compile Include="Helper\StorageHelper.cs" />
     <Compile Include="Layout\BasePage.cs" />
-    <Compile Include="Layout\ColorPicker.cs" />
     <Compile Include="Layout\PageTitle.xaml.cs">
       <DependentUpon>PageTitle.xaml</DependentUpon>
     </Compile>
@@ -336,6 +335,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DAL\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ZoDreamToolkit\ZoDreamToolkit.csproj">
+      <Project>{6dbbc687-78fb-443c-a16c-14b20cafe0a7}</Project>
+      <Name>ZoDreamToolkit</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

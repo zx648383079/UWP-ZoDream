@@ -75,36 +75,33 @@ namespace ZoDream.Model
             BookId = reader.GetInt32(1);
 
             Name = reader.GetString(2);
+
+            if (reader.FieldCount >= 6)
+            {
+                Content = reader.IsDBNull(3) ? "" : reader.GetString(3);
+
+
+                if (!reader.IsDBNull(4))
+                {
+                    Position = reader.GetInt32(4);
+                }
+                if (!reader.IsDBNull(5))
+                {
+                    Url = reader.GetString(5);
+                }
+            } else
+            {
+                if (!reader.IsDBNull(3))
+                {
+                    Position = reader.GetInt32(3);
+                }
+                if (!reader.IsDBNull(4))
+                {
+                    Url = reader.GetString(4);
+                }
+            }
             
-            if (!reader.IsDBNull(3))
-            {
-                Position = reader.GetInt32(3);
-            }
-            if (!reader.IsDBNull(4))
-            {
-                Url = reader.GetString(4);
-            }
-        }
-
-        public BookChapter(SqliteDataReader reader, bool full)
-        {
-            Id = reader.GetInt32(0);
-
-            BookId = reader.GetInt32(1);
-
-            Name = reader.GetString(2);
-
-            Content = reader.IsDBNull(3) ? "" : reader.GetString(3);
-
-
-            if (!reader.IsDBNull(4))
-            {
-                Position = reader.GetInt32(4);
-            }
-            if (!reader.IsDBNull(5))
-            {
-                Url = reader.GetString(5);
-            }
+            
         }
     }
 }

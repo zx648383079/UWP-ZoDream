@@ -48,4 +48,8 @@
 
 本程序开发初衷只是满足本人小说瘾
 
+## 部分插件来源
+
+ColorPicker  [UWP-master](https://github.com/zmtzawqlp/UWP-master)
+
 2017/6/25 23：06

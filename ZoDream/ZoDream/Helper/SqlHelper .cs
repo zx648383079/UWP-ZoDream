@@ -381,6 +381,11 @@ namespace ZoDream.Helper
             return First<T>("*", where, parameters);
         }
 
+        public static T First<T>(int id)
+        {
+            return First<T>("*", $"Id = {id}");
+        }
+
         /// <summary>
         /// 获取第一行第一列的值
         /// </summary>

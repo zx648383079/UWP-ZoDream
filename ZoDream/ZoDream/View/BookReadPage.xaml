@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:layout="using:ZoDream.Layout"
+    xmlns:control="using:ZoDreamToolkit"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -96,40 +97,26 @@
                 <ComboBoxItem>方正启体简体</ComboBoxItem>
             </ComboBox>
             <TextBlock Text="大小" Grid.Row="1"/>
-            <Slider Grid.Row="1" Grid.Column="1"
+            <Slider x:Name="FontSizeSlider" Grid.Row="1" Grid.Column="1"
                     Maximum="100" SmallChange="1" Minimum="10"/>
 
             <TextBlock Text="行高" Grid.Row="2"/>
-            <Slider Grid.Row="2" Grid.Column="1"
+            <Slider x:Name="LineHeightSlider" Grid.Row="2" Grid.Column="1"
                     Maximum="100" Minimum="10"/>
 
             <TextBlock Text="间距" Grid.Row="3"/>
-            <Slider Grid.Row="3" Grid.Column="1"
+            <Slider x:Name="DiffSlider" Grid.Row="3" Grid.Column="1"
                     Maximum="1000" Minimum="10" SmallChange="1"/>
 
             <TextBlock Text="背景" Grid.Row="4"/>
-            <Button Grid.Row="4" Grid.Column="1">
-                <Button.Flyout>
-                    <Flyout x:Name="colorFlyout">
-                        <layout:ColorPicker 
-                            Height="500"
-                            Width="500"
-                            />
-                    </Flyout>
-                </Button.Flyout>
-            </Button>
+            <Rectangle Grid.Row="4" Grid.Column="1" Fill="#FFE9FAFF" Tapped="Rectangle_Tapped"/>
 
             <TextBlock Text="前景" Grid.Row="5"/>
-            <Button Grid.Row="5" Grid.Column="1">
-                <Button.Flyout>
-                    <Flyout x:Name="colorFlyout2">
-                        <layout:ColorPicker 
-                            Height="500"
-                            Width="500"
-                            />
-                    </Flyout>
-                </Button.Flyout>
-            </Button>
+            <Rectangle Grid.Row="5" Grid.Column="1" Fill="#FF555555" Tapped="Rectangle_Tapped"/>
         </Grid>
+        <control:ColorPicker x:Name="colorPicker" Width="300" Height="40" Opacity="0" Closed="colorPicker_Closed" 
+                             SelectedColorChanged="colorPicker_SelectedColorChanged" 
+                             Placement="BottomCenter" HorizontalAlignment="Center" VerticalAlignment="Top" SelectedColor="Transparent" ArrowVisibility="Visible"/>
+
     </Grid>
 </Page>

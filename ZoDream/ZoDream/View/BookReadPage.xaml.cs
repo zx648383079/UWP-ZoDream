@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -14,9 +15,11 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Shapes;
 using ZoDream.Helper;
 using ZoDream.Model;
 using ZoDream.Services;
+using ZoDreamToolkit;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -41,49 +44,44 @@ namespace ZoDream.View
         {
             base.OnNavigatedTo(e);
             _book = e.Parameter as Book;
-            _getChpater();
+            _getChpaterAsync();
         }
 
-        private void _getChpater()
+        private void _loadSettings()
         {
-            SqlHelper.Conn.Open();
+
+        }
+
+        private async Task _getChpaterAsync()
+        {
+            await SqlHelper.Conn.OpenAsync();
             if (_book.LastChapter > 0)
             {
-                using (var reader = SqlHelper.Select<BookChapter>(_book.LastChapter))
+                _chapter = SqlHelper.First<BookChapter>(_book.LastChapter);
+                if (_chapter != null)
                 {
-                    reader.Read();
-                    if (reader.HasRows)
-                    {
-                        _chapter = new BookChapter(reader, true);
-                        Pager.PageText = _chapter.Content;
-                        TitleTb.Text = _chapter.Name;
-                    }
-                    else
-                    {
-                        _chapter = null;
-                        Toast.ShowError("本书是空的");
-                    }
-                }
-                return;
-            }
-            using (var reader = SqlHelper.Select<BookChapter>("WHERE BookId = @id ORDER BY Position ASC, Id ASC LIMIT 1", new SqliteParameter("@id", _book.Id)))
-            {
-                reader.Read();
-                if (reader.HasRows)
-                {
-                    _chapter = new BookChapter(reader, true);
                     Pager.PageText = _chapter.Content;
                     TitleTb.Text = _chapter.Name;
-                    _book.LastChapter = _chapter.Id;
-                    _book.Save();
                 }
                 else
                 {
-                    _chapter = null;
-                    Toast.ShowError("章节不存在");
+                    Toast.ShowError("本书是空的");
                 }
+                return;
             }
-            SqlHelper.Conn.Close ();
+            _chapter = SqlHelper.First<BookChapter>("BookId = @id ORDER BY Position ASC, Id ASC", new SqliteParameter("@id", _book.Id));
+            if (_chapter != null)
+            {
+                Pager.PageText = _chapter.Content;
+                TitleTb.Text = _chapter.Name;
+                _book.LastChapter = _chapter.Id;
+                _book.Save();
+            }
+            else
+            {
+                Toast.ShowError("章节不存在");
+            }
+            SqlHelper.Conn.Close();
         }
 
         private void BackBtn_Click(object sender, RoutedEventArgs e)
@@ -99,24 +97,19 @@ namespace ZoDream.View
         private void Pager_OnNextPage(object sender, EventArgs e)
         {
             SqlHelper.Conn.Open();
-            using (var reader = SqlHelper.Select<BookChapter>("WHERE BookId = @id AND Id > @chapter ORDER BY Position ASC, Id ASC LIMIT 1", 
+            _chapter = SqlHelper.First<BookChapter>("BookId = @id AND Id > @chapter ORDER BY Position ASC, Id ASC",
                 new SqliteParameter("@id", _book.Id),
-                new SqliteParameter("@chapter", _book.LastChapter)))
+                new SqliteParameter("@chapter", _book.LastChapter));
+            if (_chapter != null)
             {
-                reader.Read();
-                if (reader.HasRows)
-                {
-                    _chapter = new BookChapter(reader, true);
-                    Pager.PageText = _chapter.Content;
-                    _book.LastChapter = _chapter.Id;
-                    TitleTb.Text = _chapter.Name;
-                    _book.Save();
-                }
-                else
-                {
-                    _chapter = null;
-                    Toast.ShowError("没有更多章节了");
-                }
+                Pager.PageText = _chapter.Content;
+                _book.LastChapter = _chapter.Id;
+                TitleTb.Text = _chapter.Name;
+                _book.Save();
+            }
+            else
+            {
+                Toast.ShowError("没有更多章节了");
             }
             SqlHelper.Conn.Close();
         }
@@ -124,24 +117,19 @@ namespace ZoDream.View
         private void Pager_OnPreviousPage(object sender, EventArgs e)
         {
             SqlHelper.Conn.Open();
-            using (var reader = SqlHelper.Select<BookChapter>("WHERE BookId = @id AND Id < @chapter ORDER BY Position DESC, Id DESC LIMIT 1",
+            _chapter = SqlHelper.First<BookChapter>("BookId = @id AND Id < @chapter ORDER BY Position DESC, Id DESC",
                 new SqliteParameter("@id", _book.Id),
-                new SqliteParameter("@chapter", _book.LastChapter)))
+                new SqliteParameter("@chapter", _book.LastChapter));
+            if (_chapter != null)
             {
-                reader.Read();
-                if (reader.HasRows)
-                {
-                    _chapter = new BookChapter(reader, true);
-                    Pager.PageText = _chapter.Content;
-                    _book.LastChapter = _chapter.Id;
-                    TitleTb.Text = _chapter.Name;
-                    _book.Save();
-                }
-                else
-                {
-                    _chapter = null;
-                    Toast.ShowError("已经是最前了");
-                }
+                Pager.PageText = _chapter.Content;
+                _book.LastChapter = _chapter.Id;
+                TitleTb.Text = _chapter.Name;
+                _book.Save();
+            }
+            else
+            {
+                Toast.ShowError("已经是最前了");
             }
             SqlHelper.Conn.Close();
         }
@@ -175,6 +163,29 @@ namespace ZoDream.View
             {
 
             }), "book");
+        }
+
+        private void Rectangle_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            colorPicker.Placement = AdvancedFlyoutPlacementMode.RightCenter;
+            colorPicker.PlacementTarget = (sender as FrameworkElement);
+            colorPicker.Owner = sender;
+            colorPicker.Show();
+
+        }
+
+        private void colorPicker_SelectedColorChanged(object sender, EventArgs e)
+        {
+            if (colorPicker.Owner != null)
+            {
+                (colorPicker.Owner as Rectangle).Fill = new SolidColorBrush(colorPicker.SelectedColor);
+                colorPicker.Owner = null;
+            }
+        }
+
+        private void colorPicker_Closed(object sender, object e)
+        {
+            colorPicker.PlacementTarget = null;
         }
     }
 }

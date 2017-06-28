@@ -1,23 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.CompilerServices;
+using Windows.Storage;
 
-namespace ZoDream.Helper
+namespace ZoDreamToolkit.Common
 {
-    public class AppDataHelper
+    public static class AppDataHelper
     {
         #region 字段
         /// <summary>
         /// 获取应用的设置容器
         /// </summary>
-        private static Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-
-        /// <summary>
-        /// 获取独立存储文件
-        /// </summary>
-        private static Windows.Storage.StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+        private static ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+        
         #endregion
 
         #region Set应用设置(简单设置，复合设置，容器中的设置)
@@ -35,7 +28,7 @@ namespace ZoDream.Helper
         /// 复合设置
         /// </summary>
         /// <param name="composite"></param>
-        public static void SetCompositeValue(Windows.Storage.ApplicationDataCompositeValue composite)
+        public static void SetCompositeValue(ApplicationDataCompositeValue composite)
         {
             composite["intVal"] = 1;
             composite["strVal"] = "string";
@@ -48,9 +41,9 @@ namespace ZoDream.Helper
         /// </summary>
         /// <param name="containerName"></param>
         /// <returns></returns>
-        private static Windows.Storage.ApplicationDataContainer CreateContainer(string containerName)
+        private static ApplicationDataContainer CreateContainer(string containerName)
         {
-            return localSettings.CreateContainer(containerName, Windows.Storage.ApplicationDataCreateDisposition.Always);
+            return localSettings.CreateContainer(containerName, ApplicationDataCreateDisposition.Always);
         }
 
         /// <summary>
@@ -70,34 +63,27 @@ namespace ZoDream.Helper
 
         #region Get应用设置(简单设置，复合设置，容器中的设置)
 
+
+        public static ApplicationDataContainer GetContainer(this ApplicationDataContainer container, string key)
+            => container.Containers.ContainsKey(key) ? container.Containers[key] : null;
         /// <summary>
         /// 获取应用设置
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static T GetValue<T>(string key, T defaultValue)
-        {
-            if (localSettings.Values.ContainsKey(key))
-            {
-                return (T)localSettings.Values[key];
-            }
-            if (null != defaultValue)
-            {
-                return defaultValue;
-            }
-            return default(T);
-        }
+        public static T GetValue<T>(this ApplicationDataContainer container, [CallerMemberName] string key = null, T defaultValue = default(T))
+            => container.Values.ContainsKey(key) ? (T)container.Values[key] : defaultValue;
 
         /// <summary>
         /// 获取复合设置
         /// </summary>
         /// <param name="compositeKey"></param>
         /// <returns></returns>
-        public static Windows.Storage.ApplicationDataCompositeValue GetCompositeValue(string compositeKey)
+        public static ApplicationDataCompositeValue GetCompositeValue(string compositeKey)
         {
             // Composite setting
-            Windows.Storage.ApplicationDataCompositeValue composite =
-               (Windows.Storage.ApplicationDataCompositeValue)localSettings.Values[compositeKey];
+            ApplicationDataCompositeValue composite =
+               (ApplicationDataCompositeValue)localSettings.Values[compositeKey];
 
             return composite;
         }
@@ -137,43 +123,6 @@ namespace ZoDream.Helper
             localSettings.DeleteContainer(containerName);
         }
 
-        #endregion
-
-        #region 文件存储操作
-
-        /// <summary>
-        /// 写入文件
-        /// </summary>
-        public async void WriteTimestamp(string fileName, string contents)
-        {
-            try
-            {
-                Windows.Storage.StorageFile sampleFile = await localFolder.CreateFileAsync(fileName, Windows.Storage.CreationCollisionOption.ReplaceExisting);
-                await Windows.Storage.FileIO.WriteTextAsync(sampleFile, contents);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
-        }
-
-        /// <summary>
-        /// 读取文件
-        /// </summary>
-        public async Task<string> ReadTimestamp(string fileName)
-        {
-            try
-            {
-                Windows.Storage.StorageFile sampleFile = await localFolder.GetFileAsync(fileName);
-                string contents = await Windows.Storage.FileIO.ReadTextAsync(sampleFile);
-                return contents;
-            }
-            catch (Exception)
-            {
-                return "read faild";
-            }
-        }
         #endregion
     }
 }
