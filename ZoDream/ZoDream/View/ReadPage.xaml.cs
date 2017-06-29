@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using ZoDream.Helper;
+using ZoDreamToolkit.Common;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -77,7 +78,7 @@ namespace ZoDream.View
             {
                 return;
             }
-            var html = await Http.Get(_currentUrl);
+            var html = await HttpHelper.GetAsync(_currentUrl);
             _getUrl(html);
             TitleTb.Text = Regex.Match(html, @"\<title\>([^\<\>]+)\</title\>").Groups[1].Value;
             Pager.PageHtml = Regex.Match(html, @"\<div class=""con""\>[\s\S]+\<div class=""func""\>").Value;

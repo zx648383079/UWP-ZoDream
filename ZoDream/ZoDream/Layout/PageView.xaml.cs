@@ -460,6 +460,12 @@ namespace ZoDream.Layout
         /// </summary>
         public void SetProperty()
         {
+            SetBlockProperty();
+            SetBackground();
+        }
+
+        public void SetBlockProperty()
+        {
             foreach (var item in MainBlock.Blocks)
             {
                 item.FontFamily = FontFamily;
@@ -472,6 +478,10 @@ namespace ZoDream.Layout
                 item.FontWeight = FontWeight;
                 item.Foreground = Foreground;
             }
+        }
+
+        public void SetBackground()
+        {
             MainBg.Background = Background;
             foreach (var item in _blocks)
             {
@@ -494,7 +504,7 @@ namespace ZoDream.Layout
         }
         
 
-        private int getInt(double arg)
+        private int GetInt(double arg)
         {
             var i = Convert.ToInt32(arg);
             var j = arg - i;

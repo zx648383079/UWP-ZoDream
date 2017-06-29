@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using ZoDream.Model;
 using ZoDream.Services;
+using ZoDreamToolkit.Common;
 
 namespace ZoDream.Helper
 {
@@ -18,7 +19,7 @@ namespace ZoDream.Helper
 
         public static async Task<List<BookChapter>> GetBookChapterAsync(string url, BookRule rule)
         {
-            var html = await Http.Get(url);
+            var html = await HttpHelper.GetAsync(url);
             return await GetBookChapterAsync(html, url, rule);
         }
         /// <summary>
@@ -40,7 +41,7 @@ namespace ZoDream.Helper
             var matches = Regex.Matches(html, @"<a[^<>]+?href=""?(?<href>[^""<>\s]+)[^<>]*>(?<title>[\s\S]+?)</a>");
             foreach (Match match in matches)
             {
-                var chapter = await GetChapterAsync(Http.GetAbsolute(baseUrl, match.Groups["href"].Value), rule);
+                var chapter = await GetChapterAsync(HttpHelper.GetAbsolute(baseUrl, match.Groups["href"].Value), rule);
                 if (string.IsNullOrWhiteSpace(chapter.Name))
                 {
                     chapter.Name = match.Groups["title"].Value;
@@ -64,7 +65,7 @@ namespace ZoDream.Helper
             var matches = Regex.Matches(html, @"<a[^<>]+?href=""?(?<href>[^""<>\s]+)[^<>]*>(?<title>[\s\S]+?)</a>");
             foreach (Match match in matches)
             {
-                var chapter = await GetChapterAsync(Http.GetAbsolute(book.Url, match.Groups["href"].Value), rule);
+                var chapter = await GetChapterAsync(HttpHelper.GetAbsolute(book.Url, match.Groups["href"].Value), rule);
                 if (string.IsNullOrWhiteSpace(chapter.Name))
                 {
                     chapter.Name = match.Groups["title"].Value;
@@ -86,7 +87,7 @@ namespace ZoDream.Helper
         /// <returns></returns>
         public static async Task<BookChapter> GetChapterAsync(string url, BookRule rule)
         {
-            var html = await Http.Get(url);
+            var html = await HttpHelper.GetAsync(url);
             return new BookChapter()
             {
                 Name = NarrowText(html, rule.TitleStart, rule.TitleEnd),
@@ -344,7 +345,7 @@ namespace ZoDream.Helper
                 SqlHelper.Conn.Close();
                 return null;
             }
-            var html = await Http.Get(url);
+            var html = await HttpHelper.GetAsync(url);
             var book = GetBook(html, rule);
             book.IsLocal = false;
             book.Url = url.AbsoluteUri;

@@ -98,24 +98,24 @@
             </ComboBox>
             <TextBlock Text="大小" Grid.Row="1"/>
             <Slider x:Name="FontSizeSlider" Grid.Row="1" Grid.Column="1"
-                    Maximum="100" SmallChange="1" Minimum="10"/>
+                    Maximum="100" SmallChange="1" Minimum="10" ValueChanged="FontSizeSlider_ValueChanged"/>
 
             <TextBlock Text="行高" Grid.Row="2"/>
             <Slider x:Name="LineHeightSlider" Grid.Row="2" Grid.Column="1"
-                    Maximum="100" Minimum="10"/>
+                    Maximum="100" Minimum="10" ValueChanged="LineHeightSlider_ValueChanged"/>
 
             <TextBlock Text="间距" Grid.Row="3"/>
             <Slider x:Name="DiffSlider" Grid.Row="3" Grid.Column="1"
-                    Maximum="1000" Minimum="10" SmallChange="1"/>
+                    Maximum="1000" Minimum="10" SmallChange="1" ValueChanged="DiffSlider_ValueChanged"/>
 
-            <TextBlock Text="背景" Grid.Row="4"/>
-            <Rectangle Grid.Row="4" Grid.Column="1" Fill="#FFE9FAFF" Tapped="Rectangle_Tapped"/>
+            <TextBlock Text="背景" Grid.Row="4" />
+            <Rectangle x:Name="BackgroundRect" Grid.Row="4" Grid.Column="1" Fill="#FFE9FAFF" Tapped="Rectangle_Tapped"/>
 
             <TextBlock Text="前景" Grid.Row="5"/>
-            <Rectangle Grid.Row="5" Grid.Column="1" Fill="#FF555555" Tapped="Rectangle_Tapped"/>
+            <Rectangle x:Name="ForegroundRect" Grid.Row="5" Grid.Column="1" Fill="#FF555555" Tapped="Rectangle_Tapped"/>
         </Grid>
-        <control:ColorPicker x:Name="colorPicker" Width="300" Height="40" Opacity="0" Closed="colorPicker_Closed" 
-                             SelectedColorChanged="colorPicker_SelectedColorChanged" 
+        <control:ColorPicker x:Name="colorPicker" Width="300" Height="40" Opacity="0" Closed="ColorPicker_Closed" 
+                             SelectedColorChanged="ColorPicker_SelectedColorChanged" 
                              Placement="BottomCenter" HorizontalAlignment="Center" VerticalAlignment="Top" SelectedColor="Transparent" ArrowVisibility="Visible"/>
 
     </Grid>

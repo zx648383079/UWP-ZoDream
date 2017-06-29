@@ -17,12 +17,12 @@ namespace ZoDreamToolkit.Common
 
         private static Uri referer;
 
-        public static async Task<string> Get(Uri url)
+        public static async Task<string> GetAsync(Uri url)
         {
-            return await Get(url, true);
+            return await GetAsync(url, true);
         }
 
-        public static async Task<string> Get(Uri url, bool hasReturn)
+        public static async Task<string> GetAsync(Uri url, bool hasReturn)
         {
             var request = WebRequest.CreateHttp(url); //创建WebRequest对象              
             request.Method = "GET";    //设置请求方式为GET
@@ -74,14 +74,14 @@ namespace ZoDreamToolkit.Common
             return html;
         }
 
-        public static async Task<string> Get(string url, bool hasReturn)
+        public static async Task<string> GetAsync(string url, bool hasReturn)
         {
-            return await Get(new Uri(url), hasReturn);
+            return await GetAsync(new Uri(url), hasReturn);
         }
 
-        public static async Task<string> Get(string url)
+        public static async Task<string> GetAsync(string url)
         {
-            return await Get(url, true);
+            return await GetAsync(url, true);
         }
 
         public static Encoding GetEncoding(byte[] bytes, string charSet)

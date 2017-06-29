@@ -141,7 +141,7 @@ namespace ZoDream.View
 
         private void RefreshBtn_Click(object sender, RoutedEventArgs e)
         {
-            
+            Pager.Refresh();
         }
 
         private void SettingBtn_Click(object sender, RoutedEventArgs e)
@@ -174,18 +174,47 @@ namespace ZoDream.View
 
         }
 
-        private void colorPicker_SelectedColorChanged(object sender, EventArgs e)
+        private void ColorPicker_SelectedColorChanged(object sender, EventArgs e)
         {
-            if (colorPicker.Owner != null)
+            if (colorPicker.Owner == null)
             {
-                (colorPicker.Owner as Rectangle).Fill = new SolidColorBrush(colorPicker.SelectedColor);
-                colorPicker.Owner = null;
+                return;
             }
+            var rect = colorPicker.Owner as Rectangle;
+            rect.Fill = new SolidColorBrush(colorPicker.SelectedColor);
+            if (rect.Name == "BackgroundRect")
+            {
+                Pager.Background = rect.Fill;
+                Pager.SetBackground();
+            } else
+            {
+                Pager.Foreground = rect.Fill;
+                Pager.SetBlockProperty();
+            }
+            colorPicker.Owner = null;
         }
 
-        private void colorPicker_Closed(object sender, object e)
+        private void ColorPicker_Closed(object sender, object e)
         {
             colorPicker.PlacementTarget = null;
+        }
+
+        private void FontSizeSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            Pager.FontSize = (sender as Slider).Value;
+            Pager.SetBlockProperty();
+        }
+
+        private void LineHeightSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            Pager.LineHeight = (sender as Slider).Value;
+            Pager.SetBlockProperty();
+        }
+
+        private void DiffSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            Pager.CharacterSpacing = Convert.ToInt32((sender as Slider).Value);
+            Pager.SetBlockProperty();
         }
     }
 }

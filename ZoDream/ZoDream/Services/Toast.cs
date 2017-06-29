@@ -1,4 +1,5 @@
 ﻿using ZoDream.Helper;
+using ZoDreamToolkit.Common;
 
 namespace ZoDream.Services
 {
@@ -20,7 +21,7 @@ namespace ZoDream.Services
         /// </summary>
         public static void ShowInfo(string text)
         {
-            Show(text, "ms-appx:///Assets/Toasts/info.png");
+            Show(text, "Toasts/info.png");
         }
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace ZoDream.Services
         /// </summary>
         public static void ShowWarning(string text)
         {
-            Show(text, "ms-appx:///Assets/Toasts/warning.png");
+            Show(text, "Toasts/warning.png");
         }
 
         /// <summary>
@@ -37,7 +38,7 @@ namespace ZoDream.Services
         /// <param name="text">The text.</param>
         public static void ShowError(string text)
         {
-            Show(text, "ms-appx:///Assets/Toasts/confused.png");
+            Show(text, "Toasts/confused.png");
         }
 
         /// <summary>

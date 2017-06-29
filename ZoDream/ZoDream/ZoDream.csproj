@@ -119,13 +119,9 @@
     <Compile Include="Converter\ToggleVisibilityConverter.cs" />
     <Compile Include="Converter\VisibilityConverter.cs" />
     <Compile Include="Design\DesignDataService.cs" />
-    <Compile Include="Helper\AppDataHelper.cs" />
     <Compile Include="Helper\BookHelper.cs" />
     <Compile Include="Helper\FtpClient.cs" />
-    <Compile Include="Helper\Http.cs" />
-    <Compile Include="Helper\MessageHelper.cs" />
     <Compile Include="Helper\SqlHelper .cs" />
-    <Compile Include="Helper\StorageHelper.cs" />
     <Compile Include="Layout\BasePage.cs" />
     <Compile Include="Layout\PageTitle.xaml.cs">
       <DependentUpon>PageTitle.xaml</DependentUpon>

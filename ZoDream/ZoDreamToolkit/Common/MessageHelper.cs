@@ -1,7 +1,7 @@
 ﻿using Windows.Data.Xml.Dom;
 using Windows.UI.Notifications;
 
-namespace ZoDream.Helper
+namespace ZoDreamToolkit.Common
 {
     public class MessageHelper
     {
@@ -17,7 +17,11 @@ namespace ZoDream.Helper
 
             // 3. provide image
             var toastImageAttributes = toastXml.GetElementsByTagName("image");
-            ((XmlElement)toastImageAttributes[0]).SetAttribute("src", $"ms-appx:///assets/{assetsImageFileName}");
+            if (assetsImageFileName.IndexOf("ms-appx:") < 0)
+            {
+                assetsImageFileName = $"ms-appx:///assets/{assetsImageFileName}";
+            }
+            ((XmlElement)toastImageAttributes[0]).SetAttribute("src", assetsImageFileName);
             ((XmlElement)toastImageAttributes[0]).SetAttribute("alt", "logo");
 
             // 4. duration
