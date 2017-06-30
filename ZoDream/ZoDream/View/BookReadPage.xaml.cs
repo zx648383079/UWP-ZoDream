@@ -151,7 +151,7 @@ namespace ZoDream.View
                 SettingGrid.Visibility = Visibility.Visible;
                 return;
             }
-            SettingGrid.Visibility = Visibility.Visible;
+            SettingGrid.Visibility = Visibility.Collapsed;
         }
 
         private void ChapterBtn_Click(object sender, RoutedEventArgs e)
@@ -215,6 +215,11 @@ namespace ZoDream.View
         {
             Pager.CharacterSpacing = Convert.ToInt32((sender as Slider).Value);
             Pager.SetBlockProperty();
+        }
+
+        private void FontBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            FontBox.SelectedValue.ToString();
         }
     }
 }

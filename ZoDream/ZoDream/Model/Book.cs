@@ -23,21 +23,21 @@ namespace ZoDream.Model
 
         public string Thumb { get; set; } = "/Assets/default.jpg";
 
-        public string Author { get; set; }
+        public string Author { get; set; } = string.Empty;
 
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         public BookKinds Kind { get; set; } = BookKinds.其他;
 
         public bool IsLocal { get; set; } = true;
 
-        public int LastChapter { get; set; }
+        public int LastChapter { get; set; } = 0;
 
-        public string Url { get; set; }
+        public string Url { get; set; } = string.Empty;
 
-        public DateTime ReadTime { get; set; }
+        public DateTime ReadTime { get; set; } = DateTime.Now;
 
-        public DateTime UpdateTime { get; set; }
+        public DateTime UpdateTime { get; set; } = DateTime.Now;
 
         /// <summary>
         /// The <see cref="IsChecked" /> property's name.
@@ -116,7 +116,9 @@ namespace ZoDream.Model
             } else
             {
                 
-                Id = SqlHelper.InsertId<Book>("`Name`, `Index`, `Count`, `LastChapter`, `Url`", "@name, @index, @count, @chapter, @url", 
+                Id = SqlHelper.InsertId<Book>(
+                    "`Name`, `Index`, `Count`, `LastChapter`, `Url`", 
+                    "@name, @index, @count, @chapter, @url", 
                     new SqliteParameter("@name", Name),
                     new SqliteParameter("@index", Index),
                     new SqliteParameter("@count", Count),

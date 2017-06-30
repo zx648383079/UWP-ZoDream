@@ -91,21 +91,21 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <TextBlock Text="字体"/>
-            <ComboBox Grid.Column="1">
+            <ComboBox x:Name="FontBox" Grid.Column="1" SelectionChanged="FontBox_SelectionChanged">
                 <ComboBoxItem>宋体</ComboBoxItem>
-                <ComboBoxItem>微软雅黑</ComboBoxItem>
+                <ComboBoxItem>Microsoft YaHei</ComboBoxItem>
                 <ComboBoxItem>方正启体简体</ComboBoxItem>
             </ComboBox>
             <TextBlock Text="大小" Grid.Row="1"/>
-            <Slider x:Name="FontSizeSlider" Grid.Row="1" Grid.Column="1"
+            <Slider x:Name="FontSizeSlider" Grid.Row="1" Grid.Column="1" Value="30"
                     Maximum="100" SmallChange="1" Minimum="10" ValueChanged="FontSizeSlider_ValueChanged"/>
 
             <TextBlock Text="行高" Grid.Row="2"/>
-            <Slider x:Name="LineHeightSlider" Grid.Row="2" Grid.Column="1"
+            <Slider x:Name="LineHeightSlider" Grid.Row="2" Grid.Column="1" Value="36"
                     Maximum="100" Minimum="10" ValueChanged="LineHeightSlider_ValueChanged"/>
 
             <TextBlock Text="间距" Grid.Row="3"/>
-            <Slider x:Name="DiffSlider" Grid.Row="3" Grid.Column="1"
+            <Slider x:Name="DiffSlider" Grid.Row="3" Grid.Column="1" Value="300"
                     Maximum="1000" Minimum="10" SmallChange="1" ValueChanged="DiffSlider_ValueChanged"/>
 
             <TextBlock Text="背景" Grid.Row="4" />
