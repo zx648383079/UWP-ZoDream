@@ -16,7 +16,7 @@ namespace ZoDream.Helper
     class BookHelper
     {
 
-        const string Pattern = @"^\s{0,6}(正文)?第?\s*[0-9一二三四五六七八九十百千]{1,10}[章回|节|卷|集|幕|计]?[\s\S]{0,20}$";
+        const string Pattern = @"^\s{0,6}(正文)?第?\s*[0-9０１２３４５６７８９一二三四五六七八九十百千]{1,10}[章回|节|卷|集|幕|计]?[\s\S]{0,20}$";
 
         public static async Task<List<BookChapter>> GetBookChapterAsync(string url, BookRule rule)
         {
