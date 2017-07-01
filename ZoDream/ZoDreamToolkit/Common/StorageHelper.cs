@@ -120,7 +120,7 @@ namespace ZoDreamToolkit.Common
             arg.Append("\n");
         }
 
-        public static async Task<StorageFile> OpenFile(IList<string> filter)
+        public static async Task<StorageFile> OpenFileAsync(IList<string> filter)
         {
             var openPicker = new FileOpenPicker()
             {
@@ -134,7 +134,7 @@ namespace ZoDreamToolkit.Common
             return await openPicker.PickSingleFileAsync();
         }
 
-        public static async Task<IReadOnlyList<StorageFile>> OpenFiles()
+        public static async Task<IReadOnlyList<StorageFile>> OpenFilesAsync()
         {
             FileOpenPicker openPicker = new FileOpenPicker()
             {
@@ -145,28 +145,39 @@ namespace ZoDreamToolkit.Common
             return await openPicker.PickMultipleFilesAsync();
         }
 
-        public static async Task<StorageFolder> OpenFolder()
+        public static async Task<StorageFolder> OpenFolderAsync()
         {
             var folderPicker = new FolderPicker()
             {
                 SuggestedStartLocation = PickerLocationId.DocumentsLibrary
             };
+            folderPicker.FileTypeFilter.Add("*");
             return await folderPicker.PickSingleFolderAsync();
         }
 
-        public static async Task<bool> SaveFile(StorageFile file, string content)
+        public static async Task<bool> SaveFileAsync(StorageFile file, string content)
+        {
+            return await SaveFileAsync(file, content, Windows.Storage.Streams.UnicodeEncoding.Utf8);
+        }
+
+        public static async Task<bool> SaveFileAsync(StorageFile file, string content, Windows.Storage.Streams.UnicodeEncoding encoding)
         {
             // Prevent updates to the remote version of the file until we finish making changes and call CompleteUpdatesAsync.
             CachedFileManager.DeferUpdates(file);
             // write to file
-            await FileIO.WriteTextAsync(file, file.Name);
+            await FileIO.WriteTextAsync(file, file.Name, encoding);
             // Let Windows know that we're finished changing the file so the other app can update the remote version of the file.
             // Completing updates may require Windows to ask for user input.
             var status = await CachedFileManager.CompleteUpdatesAsync(file);
             return status == FileUpdateStatus.Complete;
         }
 
-        public static async Task<StorageFile> GetSaveFile()
+        public static async Task<StorageFile> GetSaveFileAsync()
+        {
+            return await GetSaveFileAsync("新建文档");
+        }
+
+        public static async Task<StorageFile> GetSaveFileAsync(string fileName)
         {
             var savePicker = new FileSavePicker()
             {
@@ -178,18 +189,18 @@ namespace ZoDreamToolkit.Common
             savePicker.FileTypeChoices.Add("编程文件", new List<string>() { ".php", ".cs", ".cpp", ".c", ".py", ".go" });
             savePicker.FileTypeChoices.Add("所有文件", new List<string>() { ".*" });
             // Default file name if the user does not type one in or select a file to replace
-            savePicker.SuggestedFileName = "New Document";
+            savePicker.SuggestedFileName = fileName;
             return await savePicker.PickSaveFileAsync();
         }
 
         public static async Task<bool> SaveFile(string content)
         {
-            var file = await GetSaveFile();
+            var file = await GetSaveFileAsync();
             if (file == null)
             {
                 return false;
             }
-            return await SaveFile(file, content);
+            return await SaveFileAsync(file, content);
         }
 
         public static async Task<ulong> FileSizeAsync(StorageFile file)

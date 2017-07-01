@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.Provider;
 using ZoDream.Model;
 using ZoDream.Services;
 using ZoDreamToolkit.Common;
@@ -318,7 +319,7 @@ namespace ZoDream.Helper
         /// <returns></returns>
         public static async Task<Book> OpenAsync()
         {
-            var file = await StorageHelper.OpenFile(new List<string>() { ".txt" });
+            var file = await StorageHelper.OpenFileAsync(new List<string>() { ".txt" });
             if (file == null)
             {
                 return null;
@@ -415,6 +416,40 @@ namespace ZoDream.Helper
                 .Replace("\\xa2", "\xa2")
                 .Replace("\\xa3", "\xa3")
                 .Replace("\\xa9", "\xa9");
+        }
+
+        public static async Task<bool> SaveAsync(Book book)
+        {
+            var file = await StorageHelper.GetSaveFileAsync(book.Name);
+            if (file == null)
+            {
+                return false;
+            }
+            await SqlHelper.Conn.OpenAsync();
+            var result = await SaveAsync(book, file);
+            SqlHelper.Conn.Close();
+            return result;
+        }
+
+        public static async Task<bool> SaveAsync(Book book, StorageFile file)
+        {
+            CachedFileManager.DeferUpdates(file);
+            using (var reader = SqlHelper.Select<BookChapter>("Name, Content", "WHERE BookId = @id ORDER BY Position ASC, Id ASC", new SqliteParameter("@id", book.Id)))
+            {
+                while (reader.Read())
+                {
+                    if (reader.HasRows)
+                    {
+                        await FileIO.AppendTextAsync(file, reader.GetString(0) + "\r\n\r\n", Windows.Storage.Streams.UnicodeEncoding.Utf8);
+                        if (!reader.IsDBNull(1))
+                        {
+                            await FileIO.AppendTextAsync(file, reader.GetString(1) + "\r\n\r\n", Windows.Storage.Streams.UnicodeEncoding.Utf8);
+                        }
+                    }
+                }
+            }
+            var status = await CachedFileManager.CompleteUpdatesAsync(file);
+            return status == FileUpdateStatus.Complete;
         }
     }
 }

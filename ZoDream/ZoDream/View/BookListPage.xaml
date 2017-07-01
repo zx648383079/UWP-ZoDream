@@ -27,8 +27,11 @@
                           Command="{Binding EditModeCommand}"/>
             <AppBarButton Icon="Undo" Label="完成" Visibility="{Binding EditMode,Converter={StaticResource VisibilityConverter}}"
                           Command="{Binding EditModeCommand}"/>
+            <AppBarButton Icon="Save" Label="导出" Visibility="{Binding EditMode,Converter={StaticResource VisibilityConverter}}"
+                          Command="{Binding SaveCommand}"/>
             <AppBarButton Icon="Delete" Label="删除" Visibility="{Binding EditMode,Converter={StaticResource VisibilityConverter}}"
                           Command="{Binding RemoveCommand}"/>
+            
         </CommandBar>
     </Page.BottomAppBar>
 

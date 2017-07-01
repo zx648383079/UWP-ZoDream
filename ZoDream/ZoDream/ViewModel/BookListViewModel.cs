@@ -12,6 +12,8 @@ using ZoDream.Services;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using ZoDream.View;
+using ZoDreamToolkit.Common;
+using Windows.Storage;
 
 namespace ZoDream.ViewModel
 {
@@ -169,12 +171,47 @@ namespace ZoDream.ViewModel
         private void ExecuteRemoveCommand()
         {
             SqlHelper.Conn.Open();
-            for (int i = BookList.Count - 1; i >= 0; i--)
+            for (var i = BookList.Count - 1; i >= 0; i--)
             {
                 if (BookList[i].IsChecked)
                 {
                     BookList[i].Delete();
                     BookList.RemoveAt(i);
+                }
+            }
+            SqlHelper.Conn.Close();
+        }
+
+        private RelayCommand _saveCommand;
+
+        /// <summary>
+        /// Gets the SaveCommand.
+        /// </summary>
+        public RelayCommand SaveCommand
+        {
+            get
+            {
+                return _saveCommand
+                    ?? (_saveCommand = new RelayCommand(ExecuteSaveCommand));
+            }
+        }
+
+        private void ExecuteSaveCommand()
+        {
+            _saveBooks();
+        }
+
+        private async Task _saveBooks()
+        {
+            var folder = await StorageHelper.OpenFolderAsync();
+            await SqlHelper.Conn.OpenAsync();
+            for (var i = BookList.Count - 1; i >= 0; i--)
+            {
+                var book = BookList[i];
+                if (book.IsChecked)
+                {
+                    var file = await folder.CreateFileAsync(book.Name + ".txt", CreationCollisionOption.ReplaceExisting);
+                    await BookHelper.SaveAsync(book, file);
                 }
             }
             SqlHelper.Conn.Close();
@@ -189,9 +226,6 @@ namespace ZoDream.ViewModel
                 NavigationService.NavigateTo(typeof(BookReadPage).FullName, book);
             }
         }
-
-
-
 
 
     }
