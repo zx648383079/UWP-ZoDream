@@ -16,7 +16,7 @@ namespace ZoDream.Helper
     class BookHelper
     {
 
-        const string Pattern = @"^\s{0,6}(正文)?第?\s*[0-9０１２３４５６７８９一二三四五六七八九十百千]{1,10}[章回|节|卷|集|幕|计]?[\s\S]{0,20}$";
+        public static readonly Regex Pattern = new Regex(@"^\s{0,6}(正文)?(第?)\s*[0-9０１２３４５６７８９一二三四五六七八九十百千]{1,10}([章回节卷集幕计])?[\s\S]{0,30}$");
 
         public static async Task<List<BookChapter>> GetBookChapterAsync(string url, BookRule rule)
         {
@@ -183,7 +183,7 @@ namespace ZoDream.Helper
                 return "";
             }
             var content = new StringBuilder();
-            content.Append(lines[start]);
+            content.AppendLine(lines[start]);
             start++;
             for (; start < length; start++)
             {
@@ -221,9 +221,26 @@ namespace ZoDream.Helper
                 {
                     continue;
                 }
-                if (Regex.IsMatch(line, Pattern))
+                if (Pattern.IsMatch(line))
                 {
-                    return index;
+                    // 正则匹配
+                    var match = Pattern.Match(line);
+                    var a = string.IsNullOrEmpty(match.Groups[2].Value);
+                    var b = string.IsNullOrEmpty(match.Groups[3].Value);
+                    if (!a && !b)
+                    {
+                        return index;
+                    }
+                    if (!b)
+                    {
+                        lineScore = 110;
+                        lineIndex = index;
+                    } else
+                    {
+                        lineScore = 105;
+                        lineIndex = index;
+                    }
+                    continue;
                 }
                 score = 10 - Math.Abs(count - 10000) / 1000 + 5 * Math.Abs(20 - lineLength);
                 if (line.IndexOf("“") >= 0 || line.IndexOf("‘") >= 0 || line.IndexOf("：") >= 0) {
@@ -237,6 +254,11 @@ namespace ZoDream.Helper
                 {
                     break;
                 }
+            }
+            //如果读取完了就到最后
+            if (index >= length - 1)
+            {
+                return -1;
             }
             return lineIndex;
         }

@@ -206,7 +206,7 @@ namespace ZoDream.View
                 LoadingRing.Visibility = StopBtn.Visibility = Visibility.Visible;
                 LoadingRing.IsActive = true;
             }
-
+            // webView.AddWebAllowedObject("nativeObject", new MyNativeClass()); 
         }
 
         private void Search_OnEnter(object sender, EnterEventArgs e)
@@ -303,6 +303,12 @@ namespace ZoDream.View
             Frame root = Window.Current.Content as Frame;
             //这里参数自动装箱
             root.Navigate(typeof(BookRulePage));
+        }
+
+        private void WebBrowser_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)
+        {
+            
+
         }
     }
 }

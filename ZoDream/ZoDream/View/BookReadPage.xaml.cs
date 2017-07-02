@@ -96,6 +96,11 @@ namespace ZoDream.View
 
         private void Pager_OnNextPage(object sender, EventArgs e)
         {
+            _nextPage();
+        }
+
+        private void _nextPage()
+        {
             SqlHelper.Conn.Open();
             _chapter = SqlHelper.First<BookChapter>("BookId = @id AND Id > @chapter ORDER BY Position ASC, Id ASC",
                 new SqliteParameter("@id", _book.Id),
@@ -115,6 +120,11 @@ namespace ZoDream.View
         }
 
         private void Pager_OnPreviousPage(object sender, EventArgs e)
+        {
+            _previousPage();
+        }
+
+        private void _previousPage()
         {
             SqlHelper.Conn.Open();
             _chapter = SqlHelper.First<BookChapter>("BookId = @id AND Id < @chapter ORDER BY Position DESC, Id DESC",
@@ -220,6 +230,57 @@ namespace ZoDream.View
         private void FontBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             FontBox.SelectedValue.ToString();
+        }
+
+        private void Pager_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Windows.System.VirtualKey.A:
+                case Windows.System.VirtualKey.Left:
+                    Pager.GoBack();
+                    break;
+                case Windows.System.VirtualKey.D:
+                case Windows.System.VirtualKey.Right:
+                    Pager.GoForword();
+                    break;
+                case Windows.System.VirtualKey.PageUp:
+                    _previousPage();
+                    break;
+                case Windows.System.VirtualKey.PageDown:
+                    _nextPage();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private double _isLeft;
+
+        private void Pager_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            _isLeft = e.Delta.Translation.X;
+        }
+
+        private void Pager_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        {
+            if (_isLeft < 0)
+            {
+                Pager.GoForword();
+                return;
+            }
+            Pager.GoBack();
+        }
+
+        private void Pager_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var x = e.GetPosition(Pager).X;
+            if (x < Pager.Width / 2)
+            {
+                Pager.GoBack();
+                return;
+            }
+            Pager.GoForword();
         }
     }
 }

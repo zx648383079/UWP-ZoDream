@@ -24,7 +24,8 @@
         <WebView x:Name="WebBrowser"
                  NewWindowRequested="WebBrowser_NewWindowRequested"
                  NavigationStarting="WebBrowser_NavigationStarting"
-                 NavigationCompleted="WebBrowser_NavigationCompleted"/>
+                 NavigationCompleted="WebBrowser_NavigationCompleted" UnviewableContentIdentified="WebBrowser_UnviewableContentIdentified" 
+                 />
         <ProgressRing x:Name="LoadingRing"/>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
