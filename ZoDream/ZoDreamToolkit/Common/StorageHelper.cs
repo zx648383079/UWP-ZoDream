@@ -187,7 +187,7 @@ namespace ZoDreamToolkit.Common
             savePicker.FileTypeChoices.Add("文本文件", new List<string>() { ".txt" });
             savePicker.FileTypeChoices.Add("网页文件", new List<string>() { ".html", ".htm", ".css", ".js", ".ts" });
             savePicker.FileTypeChoices.Add("编程文件", new List<string>() { ".php", ".cs", ".cpp", ".c", ".py", ".go" });
-            savePicker.FileTypeChoices.Add("所有文件", new List<string>() { ".*" });
+            //savePicker.FileTypeChoices.Add("所有文件", new List<string>() { ".*" });
             // Default file name if the user does not type one in or select a file to replace
             savePicker.SuggestedFileName = fileName;
             return await savePicker.PickSaveFileAsync();

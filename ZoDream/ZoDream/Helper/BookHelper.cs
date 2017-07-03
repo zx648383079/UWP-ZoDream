@@ -625,7 +625,7 @@ namespace ZoDream.Helper
             }
             if (font == "华康少女") 
             {
-                return new FontFamily("ms-appx:///Assets/Fonts/Myuppy.ttf#MYuppy-Bold-DDC");
+                return new FontFamily("ms-appx:/Assets/Fonts/Myuppy.ttf#MYuppy DDC");
             }
             return new FontFamily(font);
         }

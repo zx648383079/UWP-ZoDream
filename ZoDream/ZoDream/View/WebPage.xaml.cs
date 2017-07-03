@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -16,10 +17,12 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.Web.Http;
 using ZoDream.Helper;
 using ZoDream.Layout;
 using ZoDream.Model;
 using ZoDream.Services;
+using ZoDreamToolkit.Common;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
@@ -307,8 +310,27 @@ namespace ZoDream.View
 
         private void WebBrowser_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)
         {
-            
+            _downLoadFileAsync(args.Uri);
+        }
 
+        private static async Task _downLoadFileAsync(Uri uri)
+        {
+            var fileName = Regex.Match(uri.LocalPath, @"[^/\?]+\.[^\?]+", RegexOptions.RightToLeft).Value;
+            var folder = await StorageHelper.OpenFolderAsync();
+            if (folder == null)
+            {
+                return;
+            }
+            var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+            var http = new HttpClient();
+            Toast.ShowInfo("正在下载 " + fileName);
+            using (var stream = await http.GetInputStreamAsync(uri))
+            using (var inputStream = stream.AsStreamForRead())
+            using (var fileStream = await file.OpenStreamForWriteAsync())
+            {
+                await inputStream.CopyToAsync(fileStream);
+                Toast.ShowInfo(fileName + " 下载完成！");
+            }
         }
     }
 }
