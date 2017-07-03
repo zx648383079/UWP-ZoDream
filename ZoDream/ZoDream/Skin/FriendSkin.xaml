@@ -4,7 +4,7 @@
     xmlns:converter="using:ZoDream.Converter">
 
     <converter:ImageConverter x:Key="ImageConverter"/>
-    <converter:VisibilityConverter x:Key="IntConverter"/>
+    <converter:CountConverter x:Key="IntConverter"/>
     <converter:TimeConverter x:Key="TimeConverter"/>
 
 </ResourceDictionary>
