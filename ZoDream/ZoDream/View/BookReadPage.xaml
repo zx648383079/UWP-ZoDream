@@ -26,7 +26,7 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <layout:PageView x:Name="Pager"
-                         FontFamily="ms-appx:///Assets/方正启体简体.TTF#方正启体简体"
+                         FontFamily="ms-appx:///Assets/Fonts/方正启体简体.TTF#方正启体简体"
                          FontSize="30"
                          Background="#FFE9FAFF"
                          ManipulationMode="TranslateX"
@@ -92,10 +92,11 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <TextBlock Text="字体"/>
-            <ComboBox x:Name="FontBox" Grid.Column="1" SelectionChanged="FontBox_SelectionChanged">
+            <ComboBox x:Name="FontBox" Grid.Column="1" SelectedIndex="2" SelectionChanged="FontBox_SelectionChanged">
                 <ComboBoxItem>宋体</ComboBoxItem>
-                <ComboBoxItem>Microsoft YaHei</ComboBoxItem>
+                <ComboBoxItem>微软雅黑</ComboBoxItem>
                 <ComboBoxItem>方正启体简体</ComboBoxItem>
+                <ComboBoxItem>华康少女</ComboBoxItem>
             </ComboBox>
             <TextBlock Text="大小" Grid.Row="1"/>
             <Slider x:Name="FontSizeSlider" Grid.Row="1" Grid.Column="1" Value="30"

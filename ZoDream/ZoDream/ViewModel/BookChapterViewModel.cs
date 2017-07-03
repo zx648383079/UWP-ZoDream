@@ -36,6 +36,7 @@ namespace ZoDream.ViewModel
 
         private void _loadChapter()
         {
+            ChapterList.Clear();
             SqlHelper.Conn.Open();
             using (var reader = SqlHelper.Select<BookChapter>("Id, BookId, Name, Position, Url", "WHERE BookId = @id ORDER BY Position ASC, Id ASC", new SqliteParameter("@id", Book.Id)))
             {

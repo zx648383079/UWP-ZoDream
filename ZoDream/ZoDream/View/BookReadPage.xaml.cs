@@ -229,7 +229,8 @@ namespace ZoDream.View
 
         private void FontBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            FontBox.SelectedValue.ToString();
+            Pager.FontFamily = BookHelper.GetFont((FontBox.SelectedItem as ComboBoxItem).Content.ToString());
+            Pager.SetBlockProperty();
         }
 
         private void Pager_KeyDown(object sender, KeyRoutedEventArgs e)

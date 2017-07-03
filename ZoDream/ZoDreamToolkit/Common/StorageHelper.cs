@@ -268,14 +268,87 @@ namespace ZoDreamToolkit.Common
             return targetEncoding;
         }
 
+        /// <summary>
+        /// 根据流获取编码
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="defaultEncoding"></param>
+        /// <returns></returns>
+        public static Encoding GetEncoding(Stream stream, Encoding defaultEncoding)
+        {
+            var targetEncoding = defaultEncoding;
+            if (stream == null || stream.Length < 2) return targetEncoding;
+            //保存文件流的前4个字节   
+            byte byte3 = 0;
+            //保存当前Seek位置   
+            var origPos = stream.Seek(0, SeekOrigin.Begin);
+            stream.Seek(0, SeekOrigin.Begin);
+
+            var nByte = stream.ReadByte();
+            var byte1 = Convert.ToByte(nByte);
+            var byte2 = Convert.ToByte(stream.ReadByte());
+            if (stream.Length >= 3)
+            {
+                byte3 = Convert.ToByte(stream.ReadByte());
+            }
+            //根据文件流的前4个字节判断Encoding   
+            //Unicode {0xFF, 0xFE};   
+            //BE-Unicode {0xFE, 0xFF};   
+            //UTF8 = {0xEF, 0xBB, 0xBF};   
+            if (byte1 == 0xFE && byte2 == 0xFF)//UnicodeBe   
+            {
+                targetEncoding = Encoding.BigEndianUnicode;
+            }
+            else if (byte1 == 0xFF && byte2 == 0xFE && byte3 != 0xFF)//Unicode   
+            {
+                targetEncoding = Encoding.Unicode;
+            }
+            else if (byte1 == 0xEF && byte2 == 0xBB && byte3 == 0xBF) //UTF8   
+            {
+                targetEncoding = Encoding.UTF8;
+            }
+            else
+            {
+                stream.Seek(0, SeekOrigin.Begin);
+                int read;
+                while ((read = stream.ReadByte()) != -1)
+                {
+                    if (read >= 0xF0)
+                        break;
+                    if (0x80 <= read && read <= 0xBF)
+                        break;
+                    if (0xC0 <= read && read <= 0xDF)
+                    {
+                        read = stream.ReadByte();
+                        if (0x80 <= read && read <= 0xBF)
+                            continue;
+                        break;
+                    }
+                    if (0xE0 > read || read > 0xEF) continue;
+                    read = stream.ReadByte();
+                    if (0x80 <= read && read <= 0xBF)
+                    {
+                        read = stream.ReadByte();
+                        if (0x80 <= read && read <= 0xBF)
+                        {
+                            targetEncoding = Encoding.UTF8;
+                        }
+                    }
+                    break;
+                }
+            }
+            //恢复Seek位置         
+            stream.Seek(origPos, SeekOrigin.Begin);
+            return targetEncoding;
+        }
+
         public static async Task<string> GetFileTextAsync(StorageFile file)
         {
             IBuffer buffer = await FileIO.ReadBufferAsync(file);
             DataReader reader = DataReader.FromBuffer(buffer);
             byte[] fileContent = new byte[reader.UnconsumedBufferLength];
             reader.ReadBytes(fileContent);
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            return GetEncoding(fileContent, Encoding.GetEncoding("gbk")).GetString(fileContent);
+            return GetEncoding(fileContent, Encoding.UTF8).GetString(fileContent);
         }
 
         //判断文件是否存在

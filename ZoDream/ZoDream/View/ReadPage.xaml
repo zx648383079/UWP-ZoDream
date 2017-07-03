@@ -25,7 +25,7 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <layout:PageView x:Name="Pager"
-                         FontFamily="ms-appx:///Assets/方正启体简体.TTF#方正启体简体"
+                         FontFamily="ms-appx:///Assets/Fonts/方正启体简体.TTF#方正启体简体"
                          FontSize="30"
                          OnNextPage="Pager_OnNextPage"
                          OnPreviousPage="Pager_OnPreviousPage"

@@ -1,12 +1,15 @@
 ﻿using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Provider;
+using Windows.Storage.Streams;
+using Windows.UI.Xaml.Media;
 using ZoDream.Model;
 using ZoDream.Services;
 using ZoDreamToolkit.Common;
@@ -16,7 +19,7 @@ namespace ZoDream.Helper
     class BookHelper
     {
 
-        public static readonly Regex Pattern = new Regex(@"^\s{0,6}(正文)?(第?)\s*[0-9０１２３４５６７８９一二三四五六七八九十百千]{1,10}([章回节卷集幕计])?[\s\S]{0,30}$");
+        public static readonly Regex Pattern = new Regex(@"^\s{0,6}(正文|楔子)?(第?)\s*[0-9０１２３４５６７８９一二三四五六七八九十百千]{1,10}([章回节卷集幕计])?[\s\S]{0,30}$");
 
         public static async Task<List<BookChapter>> GetBookChapterAsync(string url, BookRule rule)
         {
@@ -142,8 +145,148 @@ namespace ZoDream.Helper
         /// <returns></returns>
         public static async Task GetBookChapterAsync(StorageFile file, Book book)
         {
-            var content = await StorageHelper.GetFileTextAsync(file);
-            GetBookChapter(GetLines(content), book);
+            var lines = new List<string>(); // 已获取的行
+            string line; // 当前行
+            var maxScore = 0; // 最高分数
+            var maxLine = -1; //最高分数对应的行号
+            var maxCount = 0;
+            var count = 0;    // 当前字数
+            var lineLength = 0;   // 当前行的长度
+            var index = -1;        // 当前行在数组中的序号
+            var score = 0;         // 当前行分数
+            var lastMaxLine = -1;
+            var position = 1;  // 章节总数
+            BookChapter chapter;   // 章节
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            using (var inputStream = await file.OpenReadAsync())
+            using (var classicStream = inputStream.AsStreamForRead())
+            using (var streamReader = new StreamReader(classicStream, StorageHelper.GetEncoding(classicStream, Encoding.GetEncoding("gbk"))))
+            {
+                while (streamReader.Peek() >= 0)
+                {
+                    line = streamReader.ReadLine();
+                    lines.Add(line);
+                    index ++;
+                    if (string.IsNullOrWhiteSpace(line))
+                    {
+                        score += 10;
+                        continue;
+                    }
+                    if (lastMaxLine < 0)
+                    {
+                        lastMaxLine = index;
+                        score = 0;
+                        continue;
+                    }
+                    lineLength = line.Length;
+                    count += lineLength;
+                    if (lineLength > 50)
+                    {
+                        score = 0;
+                        continue;
+                    }
+                    if (Pattern.IsMatch(line))
+                    {
+                        // 正则匹配
+                        var match = Pattern.Match(line);
+                        var a = string.IsNullOrEmpty(match.Groups[2].Value);
+                        var b = string.IsNullOrEmpty(match.Groups[3].Value);
+                        if (!a && !b)
+                        {
+                            // 保存当前已搜索的章节
+                            chapter = new BookChapter()
+                            {
+                                Name = lines[lastMaxLine],
+                                Position = position,
+                                Content = _getChapterContent(lines, 0, index - 1),
+                                BookId = book.Id
+                            };
+                            chapter.Save();
+                            position++;
+                            lines.RemoveRange(0, index);
+                            // 初始化
+                            lastMaxLine = 0;
+                            index = 0;
+                            maxScore = 0;
+                            count = 0;
+                            score = 0;
+                            continue;
+                        }
+                        if (count < 500)
+                        {
+                            score = 0;
+                            continue;
+                        }
+                        if (!b)
+                        {
+                            maxScore = score + 110;
+                            maxLine = index;
+                            maxCount = count;
+                        }
+                        else
+                        {
+                            maxScore = score + 105;
+                            maxLine = index;
+                            maxCount = count;
+                        }
+                        score = 0;
+                        continue;
+                    }
+                    if (count < 500)
+                    {
+                        score = 0;
+                        continue;
+                    }
+                    score += 10 - Math.Abs(count - 10000) / 1000 + 5 * Math.Abs(20 - lineLength);
+                    if (line.IndexOf("“") >= 0 || line.IndexOf("‘") >= 0 || line.IndexOf("：") >= 0)
+                    {
+                        score -= 5;
+                    }
+                    if (score > maxScore)
+                    {
+                        maxScore = score;
+                        maxLine = index;
+                        score = 0;
+                        maxCount = count;
+                    }
+                    if (count >= 20000)
+                    {
+                        // 保存当前已搜索的章节
+                        chapter = new BookChapter()
+                        {
+                            Name = lines[lastMaxLine],
+                            Position = position,
+                            Content = _getChapterContent(lines, 0, maxLine - 1),
+                            BookId = book.Id
+                        };
+                        chapter.Save();
+                        position++;
+                        lines.RemoveRange(0, maxLine);
+                        // 初始化
+                        lastMaxLine = 0;
+                        index -= maxLine;
+                        maxScore = 0;
+                        count -= maxCount;
+                        continue;
+                    }
+                    score = 0;
+                }
+            }
+            // 最后保存
+            chapter = new BookChapter()
+            {
+                Name = lines[lastMaxLine],
+                Position = position,
+                Content = _getChapterContent(lines, 0, lines.Count - 1),
+                BookId = book.Id
+            };
+            chapter.Save();
+
+            book.Count = position;
+            book.Save();
+            // 原始方法
+            //var content = await StorageHelper.GetFileTextAsync(file);
+            //GetBookChapter(GetLines(content), book);
         }
 
         /// <summary>
@@ -472,6 +615,19 @@ namespace ZoDream.Helper
             }
             var status = await CachedFileManager.CompleteUpdatesAsync(file);
             return status == FileUpdateStatus.Complete;
+        }
+
+        public static FontFamily GetFont(string font) 
+        {
+            if (font == "方正启体简体") 
+            {
+                return new FontFamily("ms-appx:///Assets/Fonts/方正启体简体.TTF#方正启体简体");
+            }
+            if (font == "华康少女") 
+            {
+                return new FontFamily("ms-appx:///Assets/Fonts/Myuppy.ttf#MYuppy-Bold-DDC");
+            }
+            return new FontFamily(font);
         }
     }
 }
