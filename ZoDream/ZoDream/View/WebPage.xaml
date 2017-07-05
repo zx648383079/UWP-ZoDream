@@ -65,6 +65,10 @@
             Visibility="Collapsed"
             Grid.Row="3" Orientation="Horizontal">
             <Button 
+                x:Name="CopyBtn"
+                Click="CopyBtn_Click"
+                Content="&#xE16F;"/>
+            <Button 
                 x:Name="FavoriteBtn"
                 Click="FavoriteBtn_Click"
                 Content="&#xe082;"/>

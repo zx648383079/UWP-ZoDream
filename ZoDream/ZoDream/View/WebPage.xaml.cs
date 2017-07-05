@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -315,7 +316,11 @@ namespace ZoDream.View
 
         private static async Task _downLoadFileAsync(Uri uri)
         {
-            var fileName = Regex.Match(uri.LocalPath, @"[^/\?]+\.[^\?]+", RegexOptions.RightToLeft).Value;
+            var fileName = Regex.Match(uri.LocalPath, @"[^/\?]+(\.[^\?]+)?", RegexOptions.RightToLeft).Value;
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                fileName = "新下载文件.txt";
+            }
             var folder = await StorageHelper.OpenFolderAsync();
             if (folder == null)
             {
@@ -324,6 +329,7 @@ namespace ZoDream.View
             var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
             var http = new HttpClient();
             Toast.ShowInfo("正在下载 " + fileName);
+            // 从响应Content-Disposition 获取正确的文件名
             using (var stream = await http.GetInputStreamAsync(uri))
             using (var inputStream = stream.AsStreamForRead())
             using (var fileStream = await file.OpenStreamForWriteAsync())
@@ -331,6 +337,14 @@ namespace ZoDream.View
                 await inputStream.CopyToAsync(fileStream);
                 Toast.ShowInfo(fileName + " 下载完成！");
             }
+        }
+
+        private void CopyBtn_Click(object sender, RoutedEventArgs e)
+        {
+            DataPackage dp = new DataPackage();
+            dp.SetText(WebBrowser.Source.AbsoluteUri);
+            Clipboard.SetContent(dp);
+            Toast.ShowInfo("已复制当前网址！");
         }
     }
 }
