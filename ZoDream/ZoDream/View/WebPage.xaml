@@ -91,6 +91,10 @@
                 Content="&#xE156;"
                     x:Name="ScanBtn"
                 Click="ScanBtn_Click"/>
+            <Button 
+                Content="&#xECC5;"
+                    x:Name="ClearBtn"
+                Click="ClearBtn_Click"/>
         </VariableSizedWrapGrid>
     </Grid>
 </Page>

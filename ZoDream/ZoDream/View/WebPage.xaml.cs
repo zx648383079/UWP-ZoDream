@@ -21,6 +21,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.Web.Http;
+using Windows.Web.Http.Filters;
 using ZoDream.Helper;
 using ZoDream.Layout;
 using ZoDream.Model;
@@ -361,6 +362,11 @@ namespace ZoDream.View
             dp.SetText(WebBrowser.Source.AbsoluteUri);
             Clipboard.SetContent(dp);
             Toast.ShowInfo("已复制当前网址！");
+        }
+
+        private void ClearBtn_Click(object sender, RoutedEventArgs e)
+        {
+            // 清除缓存
         }
     }
 }
