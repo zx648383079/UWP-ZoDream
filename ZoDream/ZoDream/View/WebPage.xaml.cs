@@ -4,7 +4,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -317,30 +319,44 @@ namespace ZoDream.View
         private static async Task _downLoadFileAsync(Uri uri)
         {
             var fileName = Regex.Match(uri.LocalPath, @"[^/\?]+(\.[^\?]+)?", RegexOptions.RightToLeft).Value;
-            if (string.IsNullOrWhiteSpace(fileName))
-            {
-                fileName = "新下载文件.txt";
-            }
             var folder = await StorageHelper.OpenFolderAsync();
             if (folder == null)
             {
                 return;
             }
-            var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+            
             var http = new HttpClient();
-            Toast.ShowInfo("正在下载 " + fileName);
+            Toast.ShowInfo("正在下载...");
             // 从响应Content-Disposition 获取正确的文件名
-            using (var stream = await http.GetInputStreamAsync(uri))
-            using (var inputStream = stream.AsStreamForRead())
-            using (var fileStream = await file.OpenStreamForWriteAsync())
+            using (var response = await http.GetAsync(uri))
             {
-                await inputStream.CopyToAsync(fileStream);
-                Toast.ShowInfo(fileName + " 下载完成！");
+                var httpFileName = response.Content.Headers.ContentDisposition.FileName;
+                if (!string.IsNullOrWhiteSpace(httpFileName))
+                {
+                    fileName = httpFileName;
+                }else if (string.IsNullOrWhiteSpace(fileName))
+                {
+                    fileName = "新下载文件.txt";
+                }
+                var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+                
+                using (var stream = await response.Content.ReadAsInputStreamAsync())
+                using (var inputStream = stream.AsStreamForRead())
+                using (var fileStream = await file.OpenStreamForWriteAsync())
+                {
+                    await inputStream.CopyToAsync(fileStream);
+                    Toast.ShowInfo(fileName + " 下载完成！");
+                }
             }
+            
         }
 
         private void CopyBtn_Click(object sender, RoutedEventArgs e)
         {
+            if (WebBrowser.Source == null)
+            {
+                return;
+            }
             DataPackage dp = new DataPackage();
             dp.SetText(WebBrowser.Source.AbsoluteUri);
             Clipboard.SetContent(dp);
