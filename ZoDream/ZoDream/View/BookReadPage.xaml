@@ -27,7 +27,7 @@
         </Grid.RowDefinitions>
         <layout:PageView x:Name="Pager"
                          FontFamily="ms-appx:///Assets/Fonts/方正启体简体.TTF#方正启体简体"
-                         FontSize="30"
+                         FontSize="40"
                          Background="#FFE9FAFF"
                          ManipulationMode="TranslateX"
                          OnNextPage="Pager_OnNextPage"

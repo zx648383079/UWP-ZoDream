@@ -81,7 +81,7 @@ namespace ZoDream.View
             var html = await HttpHelper.GetAsync(_currentUrl);
             _getUrl(html);
             TitleTb.Text = Regex.Match(html, @"\<title\>([^\<\>]+)\</title\>").Groups[1].Value;
-            Pager.PageHtml = Regex.Match(html, @"\<div class=""con""\>[\s\S]+\<div class=""func""\>").Value;
+            Pager.PageHtml = Regex.Match(html, @"\<div (id|class)=\\?[""'][^""']+(con|content)[\s\S]+\</div\>").Value;
             //await Http.Get(Regex.Match(html, @"\<img src=""(http://irs01\.com[^""]+)").Groups[1].Value, false);
         }
 

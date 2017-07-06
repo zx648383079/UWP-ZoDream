@@ -219,12 +219,16 @@ namespace ZoDream.ViewModel
 
         private async Task _addBookAsync()
         {
-            var book = await BookHelper.OpenAsync();
-            if (book != null)
+            var books = await BookHelper.OpenAsync();
+            if (books == null)
+            {
+                return;
+            }
+            books.ForEach(book =>
             {
                 BookList.Add(book);
-                NavigationService.NavigateTo(typeof(BookReadPage).FullName, book);
-            }
+            });
+            NavigationService.NavigateTo(typeof(BookReadPage).FullName, books[0]);
         }
 
 

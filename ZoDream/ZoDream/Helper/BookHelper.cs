@@ -482,19 +482,25 @@ namespace ZoDream.Helper
         /// 选择文件并获取生成书及章节
         /// </summary>
         /// <returns></returns>
-        public static async Task<Book> OpenAsync()
+        public static async Task<List<Book>> OpenAsync()
         {
-            var file = await StorageHelper.OpenFileAsync(new List<string>() { ".txt" });
-            if (file == null)
+            var files = await StorageHelper.OpenFilesAsync();
+            if (files == null)
             {
                 return null;
             }
-            var book = GetBook(file);
+            var books = new List<Book>();
+            
             await SqlHelper.Conn.OpenAsync();
-            book.Save();
-            await GetBookChapterAsync(file, book);
+            foreach (var file in files)
+            {
+                var book = GetBook(file);
+                book.Save();
+                await GetBookChapterAsync(file, book);
+                books.Add(book);
+            }
             SqlHelper.Conn.Close();
-            return book;
+            return books;
         }
 
         /// <summary>
