@@ -106,13 +106,15 @@ namespace ZoDream.Model
                     "`Index` = @index",
                     "`Count` = @count",
                     "`LastChapter` = @chapter",
-                    "`Url` = @url"
+                    "`Url` = @url",
+                    "`ReadTime` = @readTime"
                 }, Id, 
                 new SqliteParameter("@name", Name), 
                 new SqliteParameter("@index", Index), 
                 new SqliteParameter("@count", Count),
                 new SqliteParameter("@chapter", LastChapter),
-                new SqliteParameter("@url", Url));
+                new SqliteParameter("@url", Url),
+                new SqliteParameter("@readTime", ReadTime));
             } else
             {
                 

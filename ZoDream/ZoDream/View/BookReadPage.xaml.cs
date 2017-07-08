@@ -38,13 +38,27 @@ namespace ZoDream.View
         {
             InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Enabled;
+            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop")
+            {
+                ToolsBtn.Visibility = Visibility.Collapsed;
+            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            _book = e.Parameter as Book;
+            var book = e.Parameter as Book;
+            if (_book != null && _book.Id == book.Id)
+            {
+                return;
+            }
+            _book = book;
             _getChpaterAsync();
+            if (ToolsBtn.Visibility == Visibility.Visible)
+            {
+                ToolsBtn.SetValue(Canvas.TopProperty, Pager.Height - 50);
+                ToolsBtn.SetValue(Canvas.LeftProperty, Pager.Width - 100);
+            }
         }
 
         private void _loadSettings()
@@ -75,6 +89,7 @@ namespace ZoDream.View
                 Pager.PageText = _chapter.Content;
                 TitleTb.Text = _chapter.Name;
                 _book.LastChapter = _chapter.Id;
+                _book.ReadTime = DateTime.Now;
                 _book.Save();
             }
             else
@@ -110,6 +125,7 @@ namespace ZoDream.View
                 Pager.PageText = _chapter.Content;
                 _book.LastChapter = _chapter.Id;
                 TitleTb.Text = _chapter.Name;
+                _book.ReadTime = DateTime.Now;
                 _book.Save();
             }
             else
@@ -135,6 +151,7 @@ namespace ZoDream.View
                 Pager.PageText = _chapter.Content;
                 _book.LastChapter = _chapter.Id;
                 TitleTb.Text = _chapter.Name;
+                _book.ReadTime = DateTime.Now;
                 _book.Save();
             }
             else
@@ -282,6 +299,11 @@ namespace ZoDream.View
                 return;
             }
             Pager.GoForword();
+        }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            
         }
     }
 }

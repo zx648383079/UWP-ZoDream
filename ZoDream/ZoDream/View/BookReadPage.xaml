@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:layout="using:ZoDream.Layout"
     xmlns:control="using:ZoDreamToolkit"
-    mc:Ignorable="d">
+    mc:Ignorable="d" SizeChanged="Page_SizeChanged">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -34,6 +34,16 @@
                          OnPreviousPage="Pager_OnPreviousPage"
                          OnIndexChanged="Pager_OnIndexChanged" Foreground="#FF555555" KeyDown="Pager_KeyDown" ManipulationDelta="Pager_ManipulationDelta" ManipulationCompleted="Pager_ManipulationCompleted" Tapped="Pager_Tapped">
         </layout:PageView>
+        <Canvas>
+            <Grid Width="100" Height="50" x:Name="ToolsBtn">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Content="&#xE0E2;" FontSize="36" Padding="0" Margin="0" Width="50" Click="BackBtn_Click"/>
+                <Button Content="&#xE0E3;" Grid.Column="1" FontSize="36" Padding="0" Margin="0" Width="50" Click="ForwardBtn_Click"/>
+            </Grid>
+        </Canvas>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
