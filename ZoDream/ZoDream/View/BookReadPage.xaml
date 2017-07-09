@@ -35,13 +35,13 @@
                          OnIndexChanged="Pager_OnIndexChanged" Foreground="#FF555555" KeyDown="Pager_KeyDown" ManipulationDelta="Pager_ManipulationDelta" ManipulationCompleted="Pager_ManipulationCompleted" Tapped="Pager_Tapped">
         </layout:PageView>
         <Canvas>
-            <Grid Width="100" Height="50" x:Name="ToolsBtn">
+            <Grid Width="100" Height="80" x:Name="ToolsBtn">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button Content="&#xE0E2;" FontSize="36" Padding="0" Margin="0" Width="50" Click="BackBtn_Click"/>
-                <Button Content="&#xE0E3;" Grid.Column="1" FontSize="36" Padding="0" Margin="0" Width="50" Click="ForwardBtn_Click"/>
+                <Button Content="&#xE0E2;" FontSize="50" Padding="0" Margin="0" Width="50" Click="BackBtn_Click"/>
+                <Button Content="&#xE0E3;" Grid.Column="1" FontSize="50" Padding="0" Margin="0" Width="50" Click="ForwardBtn_Click"/>
             </Grid>
         </Canvas>
         <Grid Grid.Row="1">

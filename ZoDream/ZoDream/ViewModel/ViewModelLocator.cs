@@ -27,6 +27,7 @@ namespace ZoDream.ViewModel
             var nav = new NavigationService();
             nav.Configure(typeof(WebPage).FullName, typeof(WebPage));
             nav.Configure(typeof(BookReadPage).FullName, typeof(BookReadPage));
+            nav.Configure(typeof(HttpPage).FullName, typeof(HttpPage));
 
 
             SimpleIoc.Default.Register<INavigationService>(() => nav);
@@ -50,6 +51,7 @@ namespace ZoDream.ViewModel
             Register<BookListViewModel>();
             Register<BookChapterViewModel>();
             Register<BookRuleViewModel>();
+            Register<HttpViewModel>();
         }
         
         public MainViewModel Main => Get<MainViewModel>();
@@ -66,5 +68,7 @@ namespace ZoDream.ViewModel
         public BookChapterViewModel BookChapter => Get<BookChapterViewModel>();
 
         public BookRuleViewModel BookRule => Get<BookRuleViewModel>();
+
+        public HttpViewModel Http => Get<HttpViewModel>();
     }
 }

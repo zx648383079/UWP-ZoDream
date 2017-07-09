@@ -19,7 +19,7 @@ namespace ZoDream.Helper
     class BookHelper
     {
 
-        public static readonly Regex Pattern = new Regex(@"^\s{0,6}(正文|楔子|章节目录)?(第?)\s*[0-9０１２３４５６７８９一二三四五六七八九十百千]{1,10}([章回节卷集幕计])?[\s\S]{0,30}$");
+        public static readonly Regex Pattern = new Regex(@"^\s{0,6}(正文|楔子|章节目录)?\s*(第?)\s*[0-9０１２３４５６７８９一二三四五六七八九十百千]{1,10}([章回节卷集幕计])?[\s\S]{0,30}$");
 
         public static async Task<List<BookChapter>> GetBookChapterAsync(string url, BookRule rule)
         {
@@ -237,7 +237,7 @@ namespace ZoDream.Helper
                         score = 0;
                         continue;
                     }
-                    score += 10 - Math.Abs(count - 10000) / 1000 + 5 * Math.Abs(20 - lineLength);
+                    score += 10 - Math.Abs(count - 5000) / 1000 + 5 * Math.Abs(20 - lineLength);
                     if (line.IndexOf("“") >= 0 || line.IndexOf("‘") >= 0 || line.IndexOf("：") >= 0)
                     {
                         score -= 5;

@@ -8,6 +8,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -47,18 +48,15 @@ namespace ZoDream.View
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            
             var book = e.Parameter as Book;
-            if (_book != null && _book.Id == book.Id)
+            if (_book != null && _book.Id == book.Id && _chapter != null && book.LastChapter == _chapter.Id)
             {
                 return;
             }
             _book = book;
             _getChpaterAsync();
-            if (ToolsBtn.Visibility == Visibility.Visible)
-            {
-                ToolsBtn.SetValue(Canvas.TopProperty, Pager.Height - 50);
-                ToolsBtn.SetValue(Canvas.LeftProperty, Pager.Width - 100);
-            }
+
         }
 
         private void _loadSettings()
@@ -303,7 +301,11 @@ namespace ZoDream.View
 
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            
+            if (ToolsBtn.Visibility == Visibility.Visible)
+            {
+                ToolsBtn.SetValue(Canvas.TopProperty, e.NewSize.Height - 200);
+                ToolsBtn.SetValue(Canvas.LeftProperty, e.NewSize.Width - 100);
+            }
         }
     }
 }

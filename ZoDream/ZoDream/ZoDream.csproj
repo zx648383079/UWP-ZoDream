@@ -109,6 +109,7 @@
     <Content Include="Assets\Fonts\方正启体简体.TTF">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Web\index.html" />
     <None Include="project.json" />
     <None Include="ZoDream.pfx" />
     <None Include="ZoDream_TemporaryKey.pfx" />
@@ -163,6 +164,7 @@
     <Compile Include="ViewModel\FriendViewModel.cs" />
     <Compile Include="ViewModel\ChatViewModel.cs" />
     <Compile Include="ViewModel\HistoryViewModel.cs" />
+    <Compile Include="ViewModel\HttpViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\AboutkPage.xaml.cs">
@@ -194,6 +196,9 @@
     </Compile>
     <Compile Include="View\HistoryPage.xaml.cs">
       <DependentUpon>HistoryPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\HttpPage.xaml.cs">
+      <DependentUpon>HttpPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\QrPage.xaml.cs">
       <DependentUpon>QrPage.xaml</DependentUpon>
@@ -312,6 +317,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\HistoryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\HttpPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

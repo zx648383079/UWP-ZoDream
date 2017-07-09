@@ -22,8 +22,15 @@ namespace ZoDream.ViewModel
 
         public BookListViewModel(INavigationService navigationService) : base(navigationService)
         {
+            _refresh();
+        }
+
+        private void _refresh()
+        {
+            BookList.Clear();
             SqlHelper.Conn.Open();
-            using (var reader = SqlHelper.Select<Book>("ORDER BY ReadTime DESC")) { 
+            using (var reader = SqlHelper.Select<Book>("ORDER BY ReadTime DESC"))
+            {
                 while (reader.Read())
                 {
                     if (reader.HasRows)
@@ -135,6 +142,29 @@ namespace ZoDream.ViewModel
             //}), "book");
         }
 
+        private RelayCommand _httpCommand;
+
+        /// <summary>
+        /// Gets the HttpCommand.
+        /// </summary>
+        public RelayCommand HttpCommand
+        {
+            get
+            {
+                return _httpCommand
+                    ?? (_httpCommand = new RelayCommand(ExecuteHttpCommand));
+            }
+        }
+
+        private void ExecuteHttpCommand()
+        {
+            NavigationService.NavigateTo(typeof(HttpPage).FullName);
+            Messenger.Default.Send(new NotificationMessageAction<Book>(null, null, item =>
+            {
+                BookList.Add(item);
+            }), "http");
+        }
+
         private RelayCommand _addCommand;
 
         /// <summary>
@@ -199,6 +229,25 @@ namespace ZoDream.ViewModel
         private void ExecuteSaveCommand()
         {
             _saveBooks();
+        }
+
+        private RelayCommand _refreshCommand;
+
+        /// <summary>
+        /// Gets the RefreshCommand.
+        /// </summary>
+        public RelayCommand RefreshCommand
+        {
+            get
+            {
+                return _refreshCommand
+                    ?? (_refreshCommand = new RelayCommand(ExecuteRefreshCommand));
+            }
+        }
+
+        private void ExecuteRefreshCommand()
+        {
+            _refresh();
         }
 
         private async Task _saveBooks()

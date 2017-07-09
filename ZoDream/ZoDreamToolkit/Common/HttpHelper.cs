@@ -8,6 +8,7 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Windows.Networking.Connectivity;
 
 namespace ZoDreamToolkit.Common
 {
@@ -115,6 +116,22 @@ namespace ZoDreamToolkit.Common
         public static string GetAbsolute(Uri url, string relative)
         {
             return new Uri(url, relative).ToString();
+        }
+
+        public static string GetLocalIp()
+        {
+            var icp = NetworkInformation.GetInternetConnectionProfile();
+
+            if (icp?.NetworkAdapter == null) return null;
+            var hostname =
+                NetworkInformation.GetHostNames()
+                    .SingleOrDefault(
+                        hn =>
+                            hn.IPInformation?.NetworkAdapter != null && hn.IPInformation.NetworkAdapter.NetworkAdapterId
+                            == icp.NetworkAdapter.NetworkAdapterId);
+
+            // the ip address  
+            return hostname?.CanonicalName;
         }
     }
 }
