@@ -169,7 +169,7 @@ namespace ZoDream.Helper
                     index ++;
                     if (string.IsNullOrWhiteSpace(line))
                     {
-                        score += 10;
+                        score += 50;
                         continue;
                     }
                     if (lastMaxLine < 0)
@@ -219,13 +219,18 @@ namespace ZoDream.Helper
                         }
                         if (!b)
                         {
-                            maxScore = score + 110;
+                            maxScore = score + 100;
                             maxLine = index;
                             maxCount = count;
                         }
-                        else
+                        else if (!a)
                         {
-                            maxScore = score + 105;
+                            maxScore = score + 50;
+                            maxLine = index;
+                            maxCount = count;
+                        } else if (lineLength < 10)
+                        {
+                            maxScore = score + 100;
                             maxLine = index;
                             maxCount = count;
                         }
@@ -237,10 +242,10 @@ namespace ZoDream.Helper
                         score = 0;
                         continue;
                     }
-                    score += 10 - Math.Abs(count - 5000) / 1000 + 5 * Math.Abs(20 - lineLength);
+                    score += (300 - Math.Abs(4000 - count) / 100 + 50 - Math.Abs(10 - lineLength) * 5);
                     if (line.IndexOf("“") >= 0 || line.IndexOf("‘") >= 0 || line.IndexOf("：") >= 0)
                     {
-                        score -= 5;
+                        score -= 20;
                     }
                     if (score > maxScore)
                     {
@@ -249,9 +254,10 @@ namespace ZoDream.Helper
                         score = 0;
                         maxCount = count;
                     }
-                    if (count >= 20000)
+                    //Log.Info($"i: {index}  l: {lineLength} c:{count}  s: {score}");
+                    if (count >= 8000)
                     {
-                        // 保存当前已搜索的章节
+                        // 保存当前已搜索的章节 存在问题，下一章过长
                         chapter = new BookChapter()
                         {
                             Name = lines[lastMaxLine],
