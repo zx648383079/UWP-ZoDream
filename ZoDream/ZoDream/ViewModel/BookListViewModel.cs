@@ -14,6 +14,7 @@ using GalaSoft.MvvmLight.Messaging;
 using ZoDream.View;
 using ZoDreamToolkit.Common;
 using Windows.Storage;
+using GalaSoft.MvvmLight.Threading;
 
 namespace ZoDream.ViewModel
 {
@@ -273,11 +274,13 @@ namespace ZoDream.ViewModel
             {
                 return;
             }
+
             books.ForEach(book =>
             {
                 BookList.Add(book);
             });
             NavigationService.NavigateTo(typeof(BookReadPage).FullName, books[0]);
+
         }
 
 

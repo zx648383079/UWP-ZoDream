@@ -43,7 +43,37 @@
                 </Grid>
             </PivotItem>
             <PivotItem Header="历史记录"/>
-            <PivotItem Header="下载"/>
+            <PivotItem Header="下载">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <ListBox x:Name="FileList" ItemsSource="{Binding FileList}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Width="308" Height="39">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding Status}" Grid.Column="1"/>
+                                    <ProgressBar Grid.Row="1" Grid.ColumnSpan="2"
+                                        Minimum="0" Maximum="100" Value="{Binding Process}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <CommandBar Grid.Row="1">
+                        <AppBarButton Icon="Add" Label="添加" Command="{Binding AddFileCommand}"/>
+                    </CommandBar>
+                </Grid>
+            </PivotItem>
         </Pivot>
     </Grid>
 </Page>

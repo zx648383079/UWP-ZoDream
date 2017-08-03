@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -278,6 +279,7 @@ namespace ZoDream.Layout
                 ph.Inlines.Add(new LineBreak());
             }
             AddContent(ph);
+
         }
 
         /// <summary>

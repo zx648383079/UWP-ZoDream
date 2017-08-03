@@ -148,6 +148,8 @@
     <Compile Include="Model\DataItem.cs" />
     <Compile Include="Model\DataService.cs" />
     <Compile Include="Model\FavoriteUrl.cs" />
+    <Compile Include="Model\FileStatus.cs" />
+    <Compile Include="Model\FileUrl.cs" />
     <Compile Include="Model\FriendItem.cs" />
     <Compile Include="Model\HistoryUrl.cs" />
     <Compile Include="Model\IDataService.cs" />

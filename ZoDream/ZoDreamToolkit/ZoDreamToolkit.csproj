@@ -118,6 +118,7 @@
     <Compile Include="Common\ColorHelper.cs" />
     <Compile Include="Common\FrameworkElementExtensions.cs" />
     <Compile Include="Common\HttpHelper.cs" />
+    <Compile Include="Common\HttpRequest.cs" />
     <Compile Include="Common\MessageHelper.cs" />
     <Compile Include="Common\PropertyChangeEventSource.cs" />
     <Compile Include="Common\SpeechHelper.cs" />

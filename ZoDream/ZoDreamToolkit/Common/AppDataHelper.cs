@@ -74,6 +74,9 @@ namespace ZoDreamToolkit.Common
         public static T GetValue<T>(this ApplicationDataContainer container, [CallerMemberName] string key = null, T defaultValue = default(T))
             => container.Values.ContainsKey(key) ? (T)container.Values[key] : defaultValue;
 
+        public static T GetValue<T>([CallerMemberName] string key = null, T defaultValue = default(T))
+            => GetValue<T>(localSettings, key, defaultValue);
+
         /// <summary>
         /// 获取复合设置
         /// </summary>

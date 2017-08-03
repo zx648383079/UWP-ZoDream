@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight.Messaging;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -314,7 +315,14 @@ namespace ZoDream.View
 
         private void WebBrowser_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)
         {
-            _downLoadFileAsync(args.Uri);
+            Frame root = Window.Current.Content as Frame;
+            //这里参数自动装箱
+            root.Navigate(typeof(HistoryPage));
+            Messenger.Default.Send(new NotificationMessageAction<Uri>(args.Uri, null, item =>
+            {
+
+            }), "down");
+            //_downLoadFileAsync(args.Uri);
         }
 
         private static async Task _downLoadFileAsync(Uri uri)
@@ -327,10 +335,15 @@ namespace ZoDream.View
             }
             
             var http = new HttpClient();
-            Toast.ShowInfo("正在下载...");
+            
             // 从响应Content-Disposition 获取正确的文件名
-            using (var response = await http.GetAsync(uri))
+            using (var response = await http.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead))
             {
+                if (response.StatusCode != Windows.Web.Http.HttpStatusCode.Ok)
+                {
+                    Toast.ShowInfo("网址有误...");
+                }
+
                 var httpFileName = response.Content.Headers.ContentDisposition.FileName;
                 if (!string.IsNullOrWhiteSpace(httpFileName))
                 {
@@ -340,7 +353,9 @@ namespace ZoDream.View
                     fileName = "新下载文件.txt";
                 }
                 var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
-                
+                var contentLength = response.Content.Headers.ContentLength;
+                Toast.ShowInfo(fileName + " 正在下载...");
+
                 using (var stream = await response.Content.ReadAsInputStreamAsync())
                 using (var inputStream = stream.AsStreamForRead())
                 using (var fileStream = await file.OpenStreamForWriteAsync())

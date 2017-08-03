@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
+using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -21,6 +22,7 @@ using ZoDream.Helper;
 using ZoDream.Model;
 using ZoDream.Services;
 using ZoDreamToolkit;
+using ZoDreamToolkit.Common;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -43,6 +45,7 @@ namespace ZoDream.View
             {
                 ToolsBtn.Visibility = Visibility.Collapsed;
             }
+            _loadSetting();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -56,11 +59,6 @@ namespace ZoDream.View
             }
             _book = book;
             _getChpaterAsync();
-
-        }
-
-        private void _loadSettings()
-        {
 
         }
 
@@ -211,10 +209,12 @@ namespace ZoDream.View
             {
                 Pager.Background = rect.Fill;
                 Pager.SetBackground();
+                AppDataHelper.SetValue("Background", Pager.Background);
             } else
             {
                 Pager.Foreground = rect.Fill;
                 Pager.SetBlockProperty();
+                AppDataHelper.SetValue("Foreground", Pager.Foreground);
             }
             colorPicker.Owner = null;
         }
@@ -228,24 +228,40 @@ namespace ZoDream.View
         {
             Pager.FontSize = (sender as Slider).Value;
             Pager.SetBlockProperty();
+            AppDataHelper.SetValue("FontSize", Pager.FontSize);
         }
 
         private void LineHeightSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             Pager.LineHeight = (sender as Slider).Value;
             Pager.SetBlockProperty();
+            AppDataHelper.SetValue("LineHeight", Pager.LineHeight);
         }
 
         private void DiffSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             Pager.CharacterSpacing = Convert.ToInt32((sender as Slider).Value);
             Pager.SetBlockProperty();
+            AppDataHelper.SetValue("CharacterSpacing", Pager.CharacterSpacing);
         }
 
         private void FontBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Pager.FontFamily = BookHelper.GetFont((FontBox.SelectedItem as ComboBoxItem).Content.ToString());
+            var font = (FontBox.SelectedItem as ComboBoxItem).Content.ToString();
+            Pager.FontFamily = BookHelper.GetFont(font);
             Pager.SetBlockProperty();
+            AppDataHelper.SetValue("FontFamily", font);
+        }
+
+        private void _loadSetting()
+        {
+            Pager.FontFamily = BookHelper.GetFont(AppDataHelper.GetValue("FontFamily", "方正启体简体"));
+            Pager.CharacterSpacing = AppDataHelper.GetValue("CharacterSpacing", 300);
+            Pager.LineHeight = AppDataHelper.GetValue<double>("LineHeight", 36);
+            Pager.FontSize = AppDataHelper.GetValue<double>("FontSize", 30);
+            Pager.Background = AppDataHelper.GetValue("Background", new SolidColorBrush(ColorHelper.GetColor("#FFE9FAFF")));
+            Pager.Foreground = AppDataHelper.GetValue("Background", new SolidColorBrush(ColorHelper.GetColor("#FF555555")));
+            Pager.SetProperty();
         }
 
         private void Pager_KeyDown(object sender, KeyRoutedEventArgs e)
@@ -306,6 +322,28 @@ namespace ZoDream.View
                 ToolsBtn.SetValue(Canvas.TopProperty, e.NewSize.Height - 200);
                 ToolsBtn.SetValue(Canvas.LeftProperty, e.NewSize.Width - 100);
             }
+        }
+
+        private void ToolsBtn_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            e.Handled = true;
+
+            PointerPoint point = e.GetCurrentPoint(ToolsBtn);
+
+            if (point.Properties.IsLeftButtonPressed)
+            {
+                double x = (double)ToolsBtn.GetValue(Canvas.LeftProperty);
+                double y = (double)ToolsBtn.GetValue(Canvas.TopProperty);
+                x += point.Position.X - ToolsBtn.ActualWidth / 2.0;
+                y += point.Position.Y - ToolsBtn.ActualHeight / 2.0;
+                ToolsBtn.SetValue(Canvas.LeftProperty, x);
+                ToolsBtn.SetValue(Canvas.TopProperty, y);
+            }
+        }
+
+        private void ToolsBtn_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+
         }
     }
 }

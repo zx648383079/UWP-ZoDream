@@ -10,13 +10,25 @@ using ZoDream.Model;
 using GalaSoft.MvvmLight.Command;
 using ZoDream.View;
 using ZoDream.Helper;
+using GalaSoft.MvvmLight.Messaging;
 
 namespace ZoDream.ViewModel
 {
     public class HistoryViewModel : BaseViewModel
     {
+        private NotificationMessageAction<Uri> _downUrl;
+
         public HistoryViewModel(INavigationService navigationService) : base(navigationService)
         {
+            Messenger.Default.Register<NotificationMessageAction<Uri>>(this, "down", m =>
+            {
+                _downUrl = m;
+                var uri = m.Sender as Uri;
+                if (uri != null)
+                {
+                    _downFile(uri);
+                }
+            });
             SqlHelper.Conn.Open();
             using (var reader = SqlHelper.Select<FavoriteUrl>())
             {
@@ -29,6 +41,13 @@ namespace ZoDream.ViewModel
                 }
             }
             SqlHelper.Conn.Close();
+        }
+
+        private void _downFile(Uri uri)
+        {
+            var file = new FileUrl(uri);
+            FileList.Add(file);
+            file.DownFileAsync();
         }
 
         /// <summary>
@@ -51,6 +70,29 @@ namespace ZoDream.ViewModel
             set
             {
                 Set(FavoritesPropertyName, ref _favorites, value);
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="FileList" /> property's name.
+        /// </summary>
+        public const string FileListPropertyName = "FileList";
+
+        private ObservableCollection<FileUrl> _fileList = new ObservableCollection<FileUrl>();
+
+        /// <summary>
+        /// Sets and gets the FileList property.
+        /// Changes to that property's value raise the PropertyChanged event. 
+        /// </summary>
+        public ObservableCollection<FileUrl> FileList
+        {
+            get
+            {
+                return _fileList;
+            }
+            set
+            {
+                Set(FileListPropertyName, ref _fileList, value);
             }
         }
 
