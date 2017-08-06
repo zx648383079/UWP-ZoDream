@@ -9,6 +9,11 @@ namespace ZoDream.Services
             Debug.WriteLine("Info: " + message);
         }
 
+        public static void Info(object message)
+        {
+            Info(message.ToString());
+        }
+
         public static void Error(string message)
         {
             Debug.WriteLine("Error: " + message);

@@ -324,26 +324,42 @@ namespace ZoDream.View
             }
         }
 
-        private void ToolsBtn_PointerMoved(object sender, PointerRoutedEventArgs e)
-        {
-            e.Handled = true;
+        //private void ToolsBtn_PointerMoved(object sender, PointerRoutedEventArgs e)
+        //{
+        //    e.Handled = true;
 
-            PointerPoint point = e.GetCurrentPoint(ToolsBtn);
+        //    PointerPoint point = e.GetCurrentPoint(ToolsBtn);
 
-            if (point.Properties.IsLeftButtonPressed)
-            {
-                double x = (double)ToolsBtn.GetValue(Canvas.LeftProperty);
-                double y = (double)ToolsBtn.GetValue(Canvas.TopProperty);
-                x += point.Position.X - ToolsBtn.ActualWidth / 2.0;
-                y += point.Position.Y - ToolsBtn.ActualHeight / 2.0;
-                ToolsBtn.SetValue(Canvas.LeftProperty, x);
-                ToolsBtn.SetValue(Canvas.TopProperty, y);
-            }
-        }
+        //    if (point.Properties.IsLeftButtonPressed)
+        //    {
+        //        double x = (double)ToolsBtn.GetValue(Canvas.LeftProperty);
+        //        double y = (double)ToolsBtn.GetValue(Canvas.TopProperty);
+        //        x += point.Position.X - ToolsBtn.ActualWidth / 2.0;
+        //        y += point.Position.Y - ToolsBtn.ActualHeight / 2.0;
+        //        ToolsBtn.SetValue(Canvas.LeftProperty, x);
+        //        ToolsBtn.SetValue(Canvas.TopProperty, y);
+        //    }
+        //}
 
         private void ToolsBtn_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
-
+            e.Handled = true;
+            //e.Complete();
+            var x = (double)ToolsBtn.GetValue(Canvas.LeftProperty);
+            var y = (double)ToolsBtn.GetValue(Canvas.TopProperty);
+            var left = x + e.Delta.Translation.X;// - ToolsBtn.ActualWidth / 2.0;
+            var top = y + e.Delta.Translation.Y;// - ToolsBtn.ActualHeight / 2.0;
+            if ((e.Delta.Translation.X < 0 && left > 10)  
+                || (e.Delta.Translation.X > 0 && left < ActualWidth - 110))
+            {
+                ToolsBtn.SetValue(Canvas.LeftProperty, left);
+            }
+            if ((e.Delta.Translation.Y < 0 && top > 10) 
+                || (e.Delta.Translation.Y > 0 && top < ActualHeight - 210))
+            {
+                ToolsBtn.SetValue(Canvas.TopProperty, top);
+            }
+            
         }
     }
 }

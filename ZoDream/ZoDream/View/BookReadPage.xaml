@@ -37,7 +37,7 @@
                          ManipulationCompleted="Pager_ManipulationCompleted" Tapped="Pager_Tapped">
         </layout:PageView>
         <Canvas>
-            <Grid Width="100" Height="80" x:Name="ToolsBtn" ManipulationDelta="ToolsBtn_ManipulationDelta">
+            <Grid Width="100" Height="80" x:Name="ToolsBtn" ManipulationMode="All" ManipulationDelta="ToolsBtn_ManipulationDelta">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
