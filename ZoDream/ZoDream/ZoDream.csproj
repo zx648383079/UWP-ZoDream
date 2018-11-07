@@ -128,6 +128,7 @@
     <Compile Include="Helper\FtpClient.cs" />
     <Compile Include="Helper\SqlHelper .cs" />
     <Compile Include="Layout\BasePage.cs" />
+    <Compile Include="Layout\Pager.cs" />
     <Compile Include="Layout\PageTitle.xaml.cs">
       <DependentUpon>PageTitle.xaml</DependentUpon>
     </Compile>
