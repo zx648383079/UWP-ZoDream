@@ -1,60 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Foundation.Metadata;
+﻿using Windows.Foundation.Metadata;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using ZoDream.Models;
-using ZoDream.Pages;
-
-// https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
+using ZoDream.ViewModel;
+using System;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml;
+using System.Threading.Tasks;
 
 namespace ZoDream
 {
-    /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
-    /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage
     {
+        public MainViewModel Vm => (MainViewModel)DataContext;
+
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+            NavigationCacheMode = NavigationCacheMode.Required;
             ShowStatusBar();
-            refreshMenu();
-        }
-
-        private void refreshMenu()
-        {
-            foreach (var item in MenuItem.GetMainItems())
+            var m = SystemNavigationManager.GetForCurrentView();
+            m.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+            m.BackRequested += SystemNavigationManagerBackRequested;
+            Loaded += (s, e) =>
             {
-                IconElement icon;
-                if (item.Icon.ToLowerInvariant().EndsWith(".png"))
-                {
-                    icon = new BitmapIcon() { UriSource = new Uri(item.Icon, UriKind.RelativeOrAbsolute) };
-                }
-                else
-                {
-                    icon = new FontIcon()
-                    {
-                        FontFamily = new FontFamily("Segoe MDL2 Assets"),
-                        Glyph = item.Icon
-                    };
-                }
-                NavView.MenuItems.Add(new NavigationViewItem() { Icon = icon, Content = item.Name, DataContext = item });
-            }
+                Vm.RunClock();
+            };
         }
 
         private async void ShowStatusBar()
@@ -84,7 +56,7 @@ namespace ZoDream
                     rootFrame.GoBack();
                 }
             }
-            else if (e.Handled == false && ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+            else if (e.Handled == false)
             {
 
                 StatusBar statusBar = StatusBar.GetForCurrentView();
@@ -119,32 +91,13 @@ namespace ZoDream
                     });
                     e.Handled = true;
                 }
-            } else
-            {
-                App.Current.Exit();
             }
         }
-        private void OnNavigationViewItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
-        {
-            if (args.IsSettingsInvoked)
-            {
-                if (NavView.SelectedItem != NavView.SettingsItem)
-                {
-                    contentFrame.Navigate(typeof(SettingPage));
-                }
-            }
-            else
-            {
-                var invokedItem = NavView.MenuItems.Cast<NavigationViewItem>().Single(i => i.Content == args.InvokedItem);
 
-                var menuItem = invokedItem.DataContext as MenuItem;
-                if (menuItem.IsNew)
-                {
-                    Frame.Navigate(menuItem.PageType);
-                    return;
-                }
-                contentFrame.Navigate(menuItem.PageType);
-            }
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            Vm.StopClock();
+            base.OnNavigatingFrom(e);
         }
     }
 }
