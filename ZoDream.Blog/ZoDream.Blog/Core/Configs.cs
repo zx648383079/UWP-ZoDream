@@ -11,7 +11,7 @@ namespace ZoDream.Blog.Core
     {
         const string TOKEN_KEY = "APP_TOKEN";
 
-        internal const string HOST = "";
+        internal const string HOST = "http://zodream.localhost/open/";
 
         private static Configs newInstance;
 

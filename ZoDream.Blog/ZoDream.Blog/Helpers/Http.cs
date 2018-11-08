@@ -15,6 +15,8 @@ namespace ZoDream.Blog.Helpers
 
         public string Url { get; set; }　　//请求的url　　
         public string Body { get; set; }　　//Post/Get时的数据
+
+        public RequestMethod Method { get; set; } = RequestMethod.GET;
         public IList<string> Headers { get; set; } = new List<string>();
         private HttpClient _httpClient;
         private CancellationTokenSource _cts;　　//用于取消请求
@@ -47,6 +49,7 @@ namespace ZoDream.Blog.Helpers
         {
             Url = url;
             Body = body;
+            Method = string.IsNullOrEmpty(Body) ? RequestMethod.GET : RequestMethod.POST;
             _httpClient = new HttpClient();
             _cts = new CancellationTokenSource();
         }
@@ -59,8 +62,7 @@ namespace ZoDream.Blog.Helpers
 
         public async Task<string> GetAsync(Action<HttpResponseMessage> succes = null, Action<HttpResponseMessage> failure = null)
         {
-            RequestType method = string.IsNullOrEmpty(Body) ? RequestType.Get : RequestType.Post;
-            var request = CreateHttp(Url, method);
+            var request = CreateHttp();
             var response = await _httpClient.SendRequestAsync(request).AsTask(_cts.Token);
             if (response.StatusCode == HttpStatusCode.Ok)
             {
@@ -81,22 +83,20 @@ namespace ZoDream.Blog.Helpers
 
         public async void DoHttpClientRequest()
         {
-            //根据是否存在body判断是Get请求还是Post请求
-            RequestType method = string.IsNullOrEmpty(Body) ? RequestType.Get : RequestType.Post;
-            var request = CreateHttp(Url, method);
+            var request = CreateRequest();
             if (_httpClient != null)
             {
                 try
                 {
                     HttpResponseMessage response = null;
-                    if (method == RequestType.Post)
+                    if (Method == RequestMethod.POST)
                     {
                         //POST
                         //_httpProgressUpload = new Progress<HttpProcess>(ProgressUploadHandler);
                         //response = await _httpClient.SendRequestAsync(request).AsTask(_cts.Token, _progressUpload);
                         response = await _httpClient.SendRequestAsync(request).AsTask(_cts.Token);
                     }
-                    else if (method == RequestType.Get)
+                    else if (Method == RequestMethod.GET)
                     {
                         //GET
                         //下载进度状态信息
@@ -138,18 +138,18 @@ namespace ZoDream.Blog.Helpers
             }
         }
 
-        public HttpRequestMessage CreateHttp(string url, RequestType type = RequestType.Get)
+        public HttpRequestMessage CreateRequest()
         {
             HttpRequestMessage request = null;
             try
             {
-                if (type == RequestType.Get)
+                if (Method == RequestMethod.GET)
                 {
-                    request = new HttpRequestMessage(HttpMethod.Get, new Uri(url, UriKind.Absolute));
+                    request = new HttpRequestMessage(HttpMethod.Get, new Uri(Url, UriKind.Absolute));
                 }
                 else
                 {
-                    request = new HttpRequestMessage(HttpMethod.Post, new Uri(url, UriKind.Absolute))
+                    request = new HttpRequestMessage(HttpMethod.Post, new Uri(Url, UriKind.Absolute))
                     {
                         Content = SetPostContent(Body)
                     };
@@ -183,13 +183,33 @@ namespace ZoDream.Blog.Helpers
 
         public void AddField(string name, string value)
         {
+            AddField($"{name}={value}");
+        }
+
+        public void AddField(string body)
+        {
             if (string.IsNullOrEmpty(Body))
             {
-                Body = $"{name}={value}";
+                Body = body;
             } else
             {
-                Body += $"&{name}={value}";
+                Body += $"&{body}";
             }
+        }
+
+        public void AddField(IDictionary<string, string> param)
+        {
+            AddField(EncodeBody(param));
+        }
+
+        public static string EncodeBody(IDictionary<string, string> param) 
+        {
+           var data = new StringBuilder(string.Empty);
+            foreach (var keyValuePair in param)
+            {
+                data.AppendFormat("{0}={1}&", keyValuePair.Key, keyValuePair.Value);
+            }
+            return data.Remove(data.Length - 1, 1).ToString();
         }
 
         public void AddPath(string name, string value)
@@ -267,9 +287,9 @@ namespace ZoDream.Blog.Helpers
         }
     }
     //枚举变量 来判断是Get请求还是Post请求
-    public enum RequestType
+    public enum RequestMethod
     {
-        Post,
-        Get
+        POST,
+        GET
     }
 }
