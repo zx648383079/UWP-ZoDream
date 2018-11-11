@@ -19,7 +19,7 @@ namespace ZoDream.Models.Api
 
         public async Task<IList<T>> GetPageAsync<T>(string uri, string body)
         {
-            var content = await CreateHttp().AppendPath(uri).ExecuteAsync();
+            var content = await CreateHttp().SetBody(body).AppendPath(uri).ExecuteAsync();
             if (string.IsNullOrEmpty(content))
             {
                 return null;
@@ -32,6 +32,21 @@ namespace ZoDream.Models.Api
                 data.Add(item.ToObject<T>());
             }
             return data;
+        }
+
+        public async Task<T> GetAsync<T>(string uri, string body = null)
+        {
+           return await CreateHttp().SetBody(body).AppendPath(uri).ExecuteAsync<T>();
+        }
+
+        public async Task<T> GetAsync<T>(string uri, JContainer body)
+        {
+            return await CreateHttp().SetBody(body).AppendPath(uri).ExecuteAsync<T>();
+        }
+
+        public async Task<T> GetAsync<T>(string uri, Dictionary<string, string> body)
+        {
+            return await CreateHttp().AddParameters(body).AppendPath(uri).ExecuteAsync<T>();
         }
 
         public RestClient CreateHttp()

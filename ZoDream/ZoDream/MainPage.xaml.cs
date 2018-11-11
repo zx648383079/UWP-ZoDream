@@ -146,5 +146,14 @@ namespace ZoDream
                 contentFrame.Navigate(menuItem.PageType);
             }
         }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (e.NavigationMode == NavigationMode.New)
+            {
+                contentFrame.Navigate(typeof(HomePage));
+            }
+            base.OnNavigatedTo(e);
+        }
     }
 }

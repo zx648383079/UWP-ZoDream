@@ -13,7 +13,20 @@ namespace ZoDream.Models
 
         public string Title { get; set; }
 
-        [JsonProperty("content")]
+        public string Description { get; set; }
+        
         public string Content { get; set; }
+
+        [JsonProperty("created_at")]
+        public string CreatedAt { get; set; }
+
+        [JsonProperty("comment_count")]
+        public int CommentCount { get; set; }
+
+        public int Recommend { get; set; }
+
+        [JsonProperty("click_count")]
+        public int ClickCount { get; set; }
+        
     }
 }

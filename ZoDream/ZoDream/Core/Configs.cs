@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZoDream.Helpers;
+using ZoDream.Models;
 
 namespace ZoDream.Core
 {
@@ -27,6 +28,8 @@ namespace ZoDream.Core
                 AppData.SetValue(TOKEN_KEY, _token);
             }
         }
+
+        public User User { get; set; }
 
         public bool IsGuest()
         {

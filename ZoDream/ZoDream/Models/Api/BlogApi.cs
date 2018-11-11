@@ -11,9 +11,15 @@ namespace ZoDream.Models.Api
         /**
          * 获取博客列表
          */
-        public async Task<IList<Blog>> GetListAsync(int page = 1, int perPage = 10)
+        public async Task<Tuple<IList<Blog>, bool>> GetListAsync(uint page = 1, uint perPage = 10)
         {
-            return await GetPageAsync<Blog>($"/blog?per_page={perPage}&page={page}");
+            var data = await GetPageAsync<Blog>($"blog?per_page={perPage}&page={page}");
+            return Tuple.Create(data, data != null && data.Count == perPage);
+        }
+
+        public async Task<Blog> GetBlog(uint id)
+        {
+            return await GetAsync<Blog>($"blog?id={id}");
         }
     }
 }

@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using ZoDream.Models.Api;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -22,14 +23,33 @@ namespace ZoDream.Pages
     /// </summary>
     public sealed partial class LoginPage : Page
     {
+        private UserApi userApi = new UserApi();
+
         public LoginPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         private void LoginBtn_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(ProfilePage));
+            LoginAsync();
+            //Frame.Navigate(typeof(ProfilePage));
+        }
+
+        private async System.Threading.Tasks.Task LoginAsync()
+        {
+            if (string.IsNullOrWhiteSpace(username.Text))
+            {
+                username.Focus(FocusState.Keyboard);
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(password.Password))
+            {
+                password.Focus(FocusState.Keyboard);
+                return;
+            }
+            var data = await userApi.Login(username.Text, password.Password);
+
         }
     }
 }

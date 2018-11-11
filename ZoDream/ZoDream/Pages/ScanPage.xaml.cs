@@ -163,7 +163,7 @@ namespace ZoDream.Pages
                     var previewProperties = _mediaCapture.VideoDeviceController.GetMediaStreamProperties(MediaStreamType.VideoPreview) as VideoEncodingProperties;
                     
                     var bitmap = new WriteableBitmap((int)previewProperties.Width, (int)previewProperties.Height);
-                    ImageEncodingProperties imgFormat = ImageEncodingProperties.CreateJpeg();
+                    var imgFormat = ImageEncodingProperties.CreateJpeg();
 
                     // Create LowLagPhotoCapture object
                     var lowLagCaptureMgr = await _mediaCapture.PrepareLowLagPhotoCaptureAsync(imgFormat);

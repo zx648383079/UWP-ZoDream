@@ -117,9 +117,33 @@ namespace ZoDream.Helpers
             return this;
         }
 
+        public RestClient SetBody(string body, string contentType = "application/x-www-form-urlencoded")
+        {
+            if (!string.IsNullOrEmpty(body))
+            {
+                Method = HttpMethod.Post;
+                this.Content = body;
+                Headers.Add("Content-type", contentType);
+            }
+            return this;
+        }
+
+        public RestClient SetBody(JContainer body)
+        {
+            return SetBody(body.ToString(), "application/json");
+        }
+
         public async Task<T> ExecuteAsync<T>(Action<HttpResponseMessage> succes = null, Action<HttpResponseMessage> failure = null)
         {
             var content = await ExecuteAsync(succes, failure);
+            //if (typeof(T) == typeof(string))
+            //{
+            //    return (T)(object)content;
+            //}
+            //if (typeof(T) == typeof(JObject))
+            //{
+            //    return (T)(object)JObject.Parse(content);
+            //}
             return JsonConvert.DeserializeObject<T>(content);
         }
 
@@ -131,20 +155,23 @@ namespace ZoDream.Helpers
             {
                 Method = Method
             };
-            extractHeaders(httpClient);
+            
             var uri = new Uri(BaseUri, UriKind.Absolute);
             if (Method != HttpMethod.Get && Method != HttpMethod.Delete)
             {
                 if (!string.IsNullOrEmpty(Content))
                 {
+                    //Headers.Add("Content-type", "application/x-www-form-urlencoded"); 自己设
                     requestMessage.Content = new StringContent(Content);
                 }
                 else if (Contents != null && Contents.Any())
                 {
-                    requestMessage.Content = new StringContent(buildJson());//new FormUrlEncodedContent(Contents);
+                    Headers.Add("Content-type", "application/json");
+                    requestMessage.Content = new StringContent(BuildJson());//new FormUrlEncodedContent(Contents);
                 }
             }
-            requestMessage.RequestUri = new Uri(uri, addQeuryString());
+            ExtractHeaders(httpClient);
+            requestMessage.RequestUri = new Uri(uri, AddQeuryString());
             try
             {
                 var responseMessage = await httpClient.SendAsync(requestMessage).ConfigureAwait(false);
@@ -157,6 +184,7 @@ namespace ZoDream.Helpers
 
                 if (responseMessage.StatusCode != System.Net.HttpStatusCode.OK)
                 {
+                    Log.Error($"status code:{responseMessage.StatusCode}");
                     failure?.Invoke(responseMessage);
                     return string.Empty;
                 }
@@ -170,21 +198,21 @@ namespace ZoDream.Helpers
             return string.Empty;
         }
 
-        private string addQeuryString()
+        private string AddQeuryString()
         {
-            var query = buildQuery();
+            var query = BuildQuery();
             if (string.IsNullOrEmpty(query))
             {
                 return Path;
             }
             if (!Path.Contains("?"))
             {
-                return Path + "&" + buildQuery();
+                return Path + "&" + BuildQuery();
             }
-            return Path + "?" + buildQuery();
+            return Path + "?" + BuildQuery();
         }
 
-        private void extractHeaders(HttpClient httpClient)
+        private void ExtractHeaders(HttpClient httpClient)
         {
             if (Headers != null && Headers.Any())
             {
@@ -195,7 +223,7 @@ namespace ZoDream.Helpers
             }
         }
 
-        private string buildQuery()
+        private string BuildQuery()
         {
             if (Queries == null || !Queries.Any()) return string.Empty;
             var builder = new StringBuilder();
@@ -207,7 +235,7 @@ namespace ZoDream.Helpers
             return data.Substring(0, data.Length - 1);
         }
 
-        private string buildJson()
+        private string BuildJson()
         {
             var jsonObject = new JObject(); ;
             foreach (var item in Contents)

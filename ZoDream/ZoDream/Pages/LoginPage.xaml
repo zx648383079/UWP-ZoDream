@@ -51,7 +51,9 @@
                                        PlaceholderSource="/Assets/zx.jpg"
                                        Style="{StaticResource RoundStyle}"/>
         <TextBox Name="username" Grid.Row="3" 
-                 PlaceholderText="邮箱" InputScope="EmailSmtpAddress" Grid.Column="1"/>
+                 PlaceholderText="邮箱" 
+                 InputScope="EmailSmtpAddress" 
+                 Grid.Column="1" />
         <PasswordBox Name="password" PlaceholderText="密码"
             Grid.Row="4" Grid.Column="1"/>
         <Button Name="LoginBtn" Content="登录" 

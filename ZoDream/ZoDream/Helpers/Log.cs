@@ -23,6 +23,7 @@ namespace ZoDream.Helpers
         {
             Debug.WriteLine("Error: " + message);
         }
+
         public static void Error(string message, string method)
         {
             Debug.WriteLine("Error in '" + method + "': " + message);

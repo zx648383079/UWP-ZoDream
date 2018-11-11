@@ -10,57 +10,42 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
-        <SymbolIconSource x:Key="LikeIcon" Symbol="Like"/>
-
-        <SwipeItems x:Key="ExecuteLike" Mode="Execute">
-            <SwipeItem Text="删除" IconSource="{StaticResource LikeIcon}"/>
-        </SwipeItems>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Skins/ThemeSkin.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Page.Resources>
-
+    
     <Grid>
-        <ListView Name="listView">
-            <ListView.Header>
-                <controls:ScrollHeader Mode="QuickReturn">
-                    <Grid x:Name="MyHeaderGrid"
-                        MinHeight="250"
-                        Background="Green">
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <TextBlock Margin="12"
-                                 FontSize="48"
-                                 FontWeight="Bold"
-                                 Foreground="White"
-                                 Text="Scroll Header"
-                                 TextAlignment="Center"
-                                 TextWrapping="WrapWholeWords" />
-                            <TextBlock Margin="12,0,12,12"
-                                 VerticalAlignment="Center"
-                                 Foreground="White"
-                                 Text="The scroll header supports quick return, sticky and fade behavior. If fade is enabled the header fades out while scrolling down. If quick return is enabled the header hides when the ListView is scrolled down and reappears immediately as soon as the ListView is scrolled up again. If sticky is enabled the header is displayed regardless of scrolling."
-                                 TextAlignment="Center"
-                                 TextWrapping="WrapWholeWords" />
-                        </StackPanel>
-                    </Grid>
-                </controls:ScrollHeader>
-            </ListView.Header>
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                </Style>
-            </ListView.ItemContainerStyle>
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="x:String">
-                    <SwipeControl x:Name="ListViewSwipeContainer"
-                          RightItems="{StaticResource ExecuteDelete}"
-                          Height="60">
-                        <StackPanel Orientation="Vertical" Margin="5">
-                            <TextBlock Text="{x:Bind}" FontSize="18"/>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit..." FontSize="12"/>
+        <RefreshContainer x:Name="RefreshContainer" RefreshRequested="RefreshContainer_RefreshRequested">
+            <ListView Name="ListView" ItemsSource="{Binding}" Style="{StaticResource BlogList}" SelectionChanged="ListView_SelectionChanged">
+                <ListView.Header>
+                    <controls:ScrollHeader Mode="QuickReturn">
+                        <Grid x:Name="MyHeaderGrid"
+                            MinHeight="150"
+                            Background="Green">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock Margin="12"
+                                     FontSize="48"
+                                     FontWeight="Bold"
+                                     Foreground="White"
+                                     Text="博客"
+                                     TextAlignment="Center"
+                                     TextWrapping="WrapWholeWords" />
+                                <TextBlock Margin="12,0,12,12"
+                                     VerticalAlignment="Center"
+                                     Foreground="White"
+                                     Text="本博客只为记录学习及工作"
+                                     TextAlignment="Center"
+                                     TextWrapping="WrapWholeWords" />
                             </StackPanel>
-                        </StackPanel>
-                    </SwipeControl>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                        </Grid>
+                    </controls:ScrollHeader>
+                </ListView.Header>
+            </ListView>
+        </RefreshContainer>
+        <ProgressRing x:Name="LoadingRing" Style="{StaticResource Loading}"/>
+        
     </Grid>
 </Page>
