@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Data.Json;
@@ -110,6 +111,15 @@ namespace ZoDream.Helpers
             return this;
         }
 
+        public RestClient AddHeaders(Dictionary<string, string> headers)
+        {
+            foreach (var item in headers)
+            {
+                AddHeader(item.Key, item.Value);
+            }
+            return this;
+        }
+
         public RestClient SetContents(Dictionary<string, string> data)
         {
             if (data != null)
@@ -123,7 +133,7 @@ namespace ZoDream.Helpers
             {
                 Method = HttpMethod.Post;
                 this.Content = body;
-                Headers.Add("Content-type", contentType);
+                AddHeader("Content-Type", contentType);
             }
             return this;
         }
@@ -166,11 +176,11 @@ namespace ZoDream.Helpers
                 }
                 else if (Contents != null && Contents.Any())
                 {
-                    Headers.Add("Content-type", "application/json");
+                    AddHeader("Content-Type", "application/json");
                     requestMessage.Content = new StringContent(BuildJson());//new FormUrlEncodedContent(Contents);
                 }
             }
-            ExtractHeaders(httpClient);
+            ExtractHeaders(requestMessage);
             requestMessage.RequestUri = new Uri(uri, AddQeuryString());
             try
             {
@@ -184,7 +194,8 @@ namespace ZoDream.Helpers
 
                 if (responseMessage.StatusCode != System.Net.HttpStatusCode.OK)
                 {
-                    Log.Error($"status code:{responseMessage.StatusCode}");
+                    var content = await responseMessage.Content.ReadAsStringAsync();
+                    Log.Error($"status code:{responseMessage.StatusCode}; {content}");
                     failure?.Invoke(responseMessage);
                     return string.Empty;
                 }
@@ -205,20 +216,26 @@ namespace ZoDream.Helpers
             {
                 return Path;
             }
-            if (!Path.Contains("?"))
+            if (Path.Contains("?"))
             {
-                return Path + "&" + BuildQuery();
+                return Path + "&" + query;
             }
-            return Path + "?" + BuildQuery();
+            return Path + "?" + query;
         }
 
-        private void ExtractHeaders(HttpClient httpClient)
+        private void ExtractHeaders(HttpRequestMessage httpClient)
         {
             if (Headers != null && Headers.Any())
             {
                 foreach (var header in Headers)
                 {
-                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value);
+                    if (header.Key == "Content-Type" && httpClient.Content != null)
+                    {
+                        httpClient.Content.Headers.ContentType = new MediaTypeHeaderValue(header.Value);
+                    } else
+                    {
+                        httpClient.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                    }
                 }
             }
         }

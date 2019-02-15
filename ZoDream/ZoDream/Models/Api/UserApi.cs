@@ -14,12 +14,12 @@ namespace ZoDream.Models.Api
             var args = new JObject();
             args["email"] = email;
             args["password"] = password;
-            var data = await GetAsync<JObject>($"auth/login", args);
+            var data = await GetAsync<User>($"auth/login", args);
             if (data == null)
             {
                 return null;
             }
-            return Tuple.Create<string, User>(data["token"].ToString(), data["user"].ToObject<User>());
+            return Tuple.Create<string, User>(data.Token.ToString(), data);
         }
 
         public async Task<User> CheckEmailAsync(string email)

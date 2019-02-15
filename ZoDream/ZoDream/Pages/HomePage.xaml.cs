@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using ZoDream.Helpers;
 using ZoDream.Models;
 using ZoDream.Models.Api;
 
@@ -33,7 +34,10 @@ namespace ZoDream.Pages
         public HomePage()
         {
             this.InitializeComponent();
-            Blogs = new IncrementalLoadingCollection<Blog>(count => blogApi.GetListAsync(count));
+            Blogs = new IncrementalLoadingCollection<Blog>(count => {
+                Log.Info(count);
+                return blogApi.GetListAsync(count);
+            });
             ListView.DataContext = Blogs;
         }
 
@@ -55,11 +59,13 @@ namespace ZoDream.Pages
             LoadingRing.IsActive = true;
 
             var data = await blogApi.GetListAsync(page);
-            foreach (var blog in data.Item1)
+            if (data.Item1 != null)
             {
-                Blogs.Add(blog);
+                foreach (var blog in data.Item1)
+                {
+                    Blogs.Add(blog);
+                }
             }
-
             LoadingRing.IsActive = false;
         }
 

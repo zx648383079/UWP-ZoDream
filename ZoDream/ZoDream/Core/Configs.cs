@@ -14,7 +14,8 @@ namespace ZoDream.Core
 
         internal const string HOST = "http://zodream.localhost/open/";
 
-        internal const string APPID = "";
+        internal const string APPID = "11543906547";
+        internal const string SECRET = "012e936d3d3653b40c6fc5a32e4ea685";
 
         private static Configs _newInstance;
 

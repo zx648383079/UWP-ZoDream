@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using ZoDream.Core;
@@ -25,6 +26,11 @@ namespace ZoDream.Models.Api
                 return null;
             }
             var page = JObject.Parse(content);
+            if (page["code"] != null)
+            {
+                Log.Error($"HTTP REQUEST: {uri}; RESPONSE:{content}");
+                return null;
+            }
             var results = page["data"].Children().ToList();
             var data = new List<T>();
             foreach (var item in results)
@@ -41,7 +47,11 @@ namespace ZoDream.Models.Api
 
         public async Task<T> GetAsync<T>(string uri, JContainer body)
         {
-            return await CreateHttp().SetBody(body).AppendPath(uri).ExecuteAsync<T>();
+            return await CreateHttp().SetBody(body).AppendPath(uri).ExecuteAsync<T>(null, async message => {
+                var content = await message.Content.ReadAsStringAsync();
+                var error = JObject.Parse(content);
+                Log.Error(error["message"].ToString());
+            });
         }
 
         public async Task<T> GetAsync<T>(string uri, Dictionary<string, string> body)
@@ -53,10 +63,18 @@ namespace ZoDream.Models.Api
         {
             var headers = new Dictionary<string, string>
             {
-                { "Authorization", "ZoDream " + ToBase64String(Configs.APPID + ":") },
                 { "Date", DateTime.Now.ToLongTimeString() },
+                { "Content-Type", "application/vnd.api+json" },
+                { "Accept", "*/*" }
             };
-            return new RestClient(Configs.HOST).AddQuery("token", Configs.NewInstance().Token);
+            if (!string.IsNullOrEmpty(Configs.NewInstance().Token))
+            {
+                headers.Add("Authorization", "Bearer " + Configs.NewInstance().Token);
+            }
+            var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            return new RestClient(Configs.HOST)
+                .AddQuery("appid", Configs.APPID).AddQuery("timestamp", timestamp)
+                .AddQuery("sign", EncryptWithMD5(Configs.APPID + timestamp + Configs.SECRET)).AddHeaders(headers);
         }
 
         public RestClient CreatePostHttp()
@@ -84,6 +102,20 @@ namespace ZoDream.Models.Api
             }
             var bytes = Convert.FromBase64String(value);
             return Encoding.UTF8.GetString(bytes);
+        }
+
+        public static string EncryptWithMD5(string source)
+        {
+            var sor = Encoding.UTF8.GetBytes(source);
+            var md5 = MD5.Create();
+            var result = md5.ComputeHash(sor);
+            var strbul = new StringBuilder(40);
+            for (int i = 0; i < result.Length; i++)
+            {
+                strbul.Append(result[i].ToString("x2"));//加密结果"x2"结果为32位,"x3"结果为48位,"x4"结果为64位
+
+            }
+            return strbul.ToString();
         }
     }
 }

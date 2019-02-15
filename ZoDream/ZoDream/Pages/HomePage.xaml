@@ -19,7 +19,9 @@
     
     <Grid>
         <RefreshContainer x:Name="RefreshContainer" RefreshRequested="RefreshContainer_RefreshRequested">
-            <ListView Name="ListView" ItemsSource="{Binding}" Style="{StaticResource BlogList}" SelectionChanged="ListView_SelectionChanged">
+            <ListView Name="ListView" 
+                      
+                      ItemsSource="{Binding Mode=TwoWay}" Style="{StaticResource BlogList}" SelectionChanged="ListView_SelectionChanged">
                 <ListView.Header>
                     <controls:ScrollHeader Mode="QuickReturn">
                         <Grid x:Name="MyHeaderGrid"
