@@ -11,8 +11,11 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <NavigationView x:Name="NavView" 
-                        IsSettingsVisible="true" IsTabStop="False" Header="ZoDream"
-                        ItemInvoked="OnNavigationViewItemInvoked">
+                        IsSettingsVisible="true" IsTabStop="False" 
+                        Header="{Binding Path=Content.NavTitile, ElementName=contentFrame}"
+                        ItemInvoked="OnNavigationViewItemInvoked" 
+                        IsBackEnabled="{Binding Path=CanGoBack,ElementName=contentFrame}"
+                        BackRequested="NavView_BackRequested">
             <NavigationView.AutoSuggestBox>
                 <AutoSuggestBox x:Name="ASB" PlaceholderText="搜索" QueryIcon="Find" />
             </NavigationView.AutoSuggestBox>

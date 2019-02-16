@@ -9,14 +9,9 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <TextBlock x:Name="TitleTb"/>
-        <WebView Grid.Row="1"
+        <WebView
                  Name="BlogContent"
-                 Margin="10,0,0,0">
+                 >
         </WebView>
 
 

@@ -22,7 +22,7 @@ namespace ZoDream.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class BlogPage : Page
+    public sealed partial class BlogPage : Page, ISubPage
     {
         private Blog blog;
 
@@ -33,20 +33,20 @@ namespace ZoDream.Pages
             this.InitializeComponent();
         }
 
+        public string NavTitile => Blog.PageTitle;
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (e.Parameter != null)
             {
-                var id = Convert.ToUInt32(e.Parameter);
-                Refresh(id);
+                Refresh(Convert.ToUInt32(e.Parameter));
             }
         }
 
         private async void Refresh(uint id)
         {
             blog = await blogApi.GetBlog(id);
-            TitleTb.Text = blog.Title;
             BlogContent.NavigateToString(blog.Content);
         }
 

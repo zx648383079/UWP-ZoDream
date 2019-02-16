@@ -29,15 +29,24 @@ namespace ZoDream
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        
+
         public MainPage()
         {
             this.InitializeComponent();
             ShowStatusBar();
             refreshMenu();
+            MenuItem.RefreshMenuEvent += MenuItem_RefreshMenuEvent;
+        }
+
+        private void MenuItem_RefreshMenuEvent()
+        {
+            refreshMenu();
         }
 
         private void refreshMenu()
         {
+            NavView.MenuItems.Clear();
             foreach (var item in MenuItem.GetMainItems())
             {
                 IconElement icon;
@@ -154,6 +163,11 @@ namespace ZoDream
                 contentFrame.Navigate(typeof(HomePage));
             }
             base.OnNavigatedTo(e);
+        }
+
+        private void NavView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
+        {
+            contentFrame.GoBack();
         }
     }
 }

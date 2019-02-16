@@ -122,6 +122,7 @@
     <Compile Include="Pages\AuthorizePage.xaml.cs">
       <DependentUpon>AuthorizePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ISubPage.cs" />
     <Compile Include="Pages\BlogPage.xaml.cs">
       <DependentUpon>BlogPage.xaml</DependentUpon>
     </Compile>

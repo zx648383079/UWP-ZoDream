@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using ZoDream.Core;
+using ZoDream.Models;
 using ZoDream.Models.Api;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -23,9 +24,11 @@ namespace ZoDream.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class LoginPage : Page
+    public sealed partial class LoginPage : Page, ISubPage
     {
         private UserApi userApi = new UserApi();
+
+        public string NavTitile => "登录";
 
         public LoginPage()
         {
@@ -58,6 +61,7 @@ namespace ZoDream.Pages
             Configs.NewInstance().Token = data.Item1;
             Configs.NewInstance().User = data.Item2;
             Frame.Navigate(typeof(ProfilePage));
+            MenuItem.TriggerRefreshMenuEvent();
         }
     }
 }

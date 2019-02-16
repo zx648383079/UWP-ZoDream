@@ -29,6 +29,11 @@ namespace ZoDream.Models
 
         [JsonProperty("click_count")]
         public int ClickCount { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static string PageTitle;
         
     }
 }

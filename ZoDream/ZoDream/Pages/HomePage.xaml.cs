@@ -25,13 +25,15 @@ namespace ZoDream.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class HomePage : Page
+    public sealed partial class HomePage : Page, ISubPage
     {
         private IncrementalLoadingCollection<Blog> Blogs;
 
         private uint page = 1;
 
         private BlogApi blogApi = new BlogApi();
+
+        public string NavTitile => "博客";
 
         public HomePage()
         {
@@ -80,7 +82,11 @@ namespace ZoDream.Pages
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ListView.SelectedItem is Blog blog) Frame.Navigate(typeof(BlogPage), blog.Id);
+            if (ListView.SelectedItem is Blog blog)
+            {
+                Blog.PageTitle = blog.Title;
+                Frame.Navigate(typeof(BlogPage), blog.Id);
+            };
         }
 
         private void MoreBtn_Tapped(object sender, TappedRoutedEventArgs e)

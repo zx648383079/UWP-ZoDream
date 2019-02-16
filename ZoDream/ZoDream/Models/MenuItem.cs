@@ -31,5 +31,14 @@ namespace ZoDream.Models
                 : new MenuItem() {Icon = "\uE2AF", Name = "已登录", PageType = typeof(ProfilePage)});
             return items;
         }
+
+        public delegate void RefreshMenuHandle();
+
+        public static event RefreshMenuHandle RefreshMenuEvent;
+
+        public static void TriggerRefreshMenuEvent()
+        {
+            RefreshMenuEvent();
+        }
     }
 }
