@@ -116,6 +116,8 @@
     <Compile Include="Models\Blog.cs" />
     <Compile Include="Models\IncrementalLoadingCollection.cs" />
     <Compile Include="Models\MenuItem.cs" />
+    <Compile Include="Models\Page.cs" />
+    <Compile Include="Models\Paging.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Pages\AuthorizePage.xaml.cs">
       <DependentUpon>AuthorizePage.xaml</DependentUpon>

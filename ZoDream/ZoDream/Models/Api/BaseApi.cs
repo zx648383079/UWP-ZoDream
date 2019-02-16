@@ -13,12 +13,12 @@ namespace ZoDream.Models.Api
 {
     public class BaseApi
     {
-        public async Task<IList<T>> GetPageAsync<T>(string uri)
+        public async Task<Page<T>> GetPageAsync<T>(string uri)
         {
             return await GetPageAsync<T>(uri, null);
         }
 
-        public async Task<IList<T>> GetPageAsync<T>(string uri, string body)
+        public async Task<Page<T>> GetPageAsync<T>(string uri, string body)
         {
             var content = await CreateHttp().SetBody(body).AppendPath(uri).ExecuteAsync();
             if (string.IsNullOrEmpty(content))
@@ -31,13 +31,7 @@ namespace ZoDream.Models.Api
                 Log.Error($"HTTP REQUEST: {uri}; RESPONSE:{content}");
                 return null;
             }
-            var results = page["data"].Children().ToList();
-            var data = new List<T>();
-            foreach (var item in results)
-            {
-                data.Add(item.ToObject<T>());
-            }
-            return data;
+            return page.ToObject<Page<T>>();
         }
 
         public async Task<T> GetAsync<T>(string uri, string body = null)

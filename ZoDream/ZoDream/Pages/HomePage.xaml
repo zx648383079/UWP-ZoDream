@@ -16,12 +16,17 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>
-    
+
     <Grid>
-        <RefreshContainer x:Name="RefreshContainer" RefreshRequested="RefreshContainer_RefreshRequested">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <RefreshContainer x:Name="RefreshContainer" RefreshRequested="RefreshContainer_RefreshRequested" 
+                          >
             <ListView Name="ListView" 
                       
-                      ItemsSource="{Binding Mode=TwoWay}" Style="{StaticResource BlogList}" SelectionChanged="ListView_SelectionChanged">
+                      Style="{StaticResource BlogList}" SelectionChanged="ListView_SelectionChanged">
                 <ListView.Header>
                     <controls:ScrollHeader Mode="QuickReturn">
                         <Grid x:Name="MyHeaderGrid"
@@ -48,6 +53,9 @@
             </ListView>
         </RefreshContainer>
         <ProgressRing x:Name="LoadingRing" Style="{StaticResource Loading}"/>
-        
+        <Button x:Name="MoreBtn" 
+                Tapped="MoreBtn_Tapped"
+                Grid.Row="1" Content="加载更多" 
+                HorizontalAlignment="Stretch"/>
     </Grid>
 </Page>

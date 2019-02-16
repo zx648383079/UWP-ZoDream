@@ -17,6 +17,8 @@ namespace ZoDream.Models
         
         public string Content { get; set; }
 
+        public int Type { get; set; } = 0;
+
         [JsonProperty("created_at")]
         public string CreatedAt { get; set; }
 

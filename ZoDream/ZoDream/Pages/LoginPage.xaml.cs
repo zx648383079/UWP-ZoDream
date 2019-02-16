@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using ZoDream.Core;
 using ZoDream.Models.Api;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -50,7 +51,13 @@ namespace ZoDream.Pages
                 return;
             }
             var data = await userApi.Login(username.Text, password.Password);
-
+            if (data == null)
+            {
+                return;
+            }
+            Configs.NewInstance().Token = data.Item1;
+            Configs.NewInstance().User = data.Item2;
+            Frame.Navigate(typeof(ProfilePage));
         }
     }
 }
