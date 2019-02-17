@@ -26,11 +26,6 @@ namespace ZoDream.Models.Api
                 return null;
             }
             var page = JObject.Parse(content);
-            if (page["code"] != null)
-            {
-                Log.Error($"HTTP REQUEST: {uri}; RESPONSE:{content}");
-                return null;
-            }
             return page.ToObject<Page<T>>();
         }
 

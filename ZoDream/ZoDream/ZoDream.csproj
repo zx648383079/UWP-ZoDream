@@ -112,8 +112,11 @@
     </Compile>
     <Compile Include="Models\Api\BaseApi.cs" />
     <Compile Include="Models\Api\BlogApi.cs" />
+    <Compile Include="Models\Api\BookApi.cs" />
     <Compile Include="Models\Api\UserApi.cs" />
     <Compile Include="Models\Blog.cs" />
+    <Compile Include="Models\Book.cs" />
+    <Compile Include="Models\BookChapter.cs" />
     <Compile Include="Models\IncrementalLoadingCollection.cs" />
     <Compile Include="Models\MenuItem.cs" />
     <Compile Include="Models\Page.cs" />
@@ -121,6 +124,15 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Pages\AuthorizePage.xaml.cs">
       <DependentUpon>AuthorizePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\BookChapterPage.xaml.cs">
+      <DependentUpon>BookChapterPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\BookListPage.xaml.cs">
+      <DependentUpon>BookListPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\BookPage.xaml.cs">
+      <DependentUpon>BookPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\ISubPage.cs" />
     <Compile Include="Pages\BlogPage.xaml.cs">
@@ -191,6 +203,18 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\BlogPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\BookChapterPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\BookListPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\BookPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

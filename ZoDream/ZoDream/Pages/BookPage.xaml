@@ -1,0 +1,51 @@
+﻿<Page
+    x:Class="ZoDream.Pages.BookPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ZoDream.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Skins/ThemeSkin.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+        <ListView Name="ListView" 
+                      
+                      Style="{StaticResource BlogList}" SelectionChanged="ListView_SelectionChanged">
+            <ListView.Header>
+                <controls:ScrollHeader Mode="QuickReturn">
+                    <Grid x:Name="MyHeaderGrid"
+                            MinHeight="150"
+                            Background="Green">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Margin="12"
+                                     FontSize="48"
+                                     FontWeight="Bold"
+                                     Foreground="White"
+                                     Text="小说"
+                                     x:Name="NameTb"
+                                     TextAlignment="Center"
+                                     TextWrapping="WrapWholeWords" />
+                            <TextBlock Margin="12,0,12,12"
+                                     VerticalAlignment="Center"
+                                     Foreground="White"
+                                     Text="小说"
+                                     x:Name="DescTb"
+                                     TextAlignment="Center"
+                                     TextWrapping="WrapWholeWords" />
+                        </StackPanel>
+                    </Grid>
+                </controls:ScrollHeader>
+            </ListView.Header>
+        </ListView>
+    </Grid>
+</Page>
