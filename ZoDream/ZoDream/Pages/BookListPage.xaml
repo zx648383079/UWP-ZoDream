@@ -18,7 +18,7 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
@@ -26,7 +26,7 @@
         <RefreshContainer x:Name="RefreshContainer" RefreshRequested="RefreshContainer_RefreshRequested" Grid.Row="1">
             <ListView Name="ListView" 
                       
-                      Style="{StaticResource BlogList}" SelectionChanged="ListView_SelectionChanged">
+                      Style="{StaticResource BookList}" SelectionChanged="ListView_SelectionChanged">
 
             </ListView>
         </RefreshContainer>

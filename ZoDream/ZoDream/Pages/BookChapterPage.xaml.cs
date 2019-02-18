@@ -24,7 +24,7 @@ namespace ZoDream.Pages
     /// </summary>
     public sealed partial class BookChapterPage : Page, ISubPage
     {
-        public string NavTitile => BookChapter.PageTitle;
+        public string NavTitile => $"{BookChapter.PageTitle}-{Book.PageTitle}";
 
         private BookApi bookApi = new BookApi();
 

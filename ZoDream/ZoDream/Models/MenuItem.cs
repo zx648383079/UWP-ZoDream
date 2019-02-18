@@ -24,7 +24,7 @@ namespace ZoDream.Models
             var items = new List<MenuItem>
             {
                 new MenuItem() { Icon = "\uE80F", Name = "首页", PageType = typeof(HomePage) },
-                new MenuItem() { Icon = "\uE156", Name = "小说", PageType = typeof(BookListPage)},
+                new MenuItem() { Icon = "\uE82D", Name = "小说", PageType = typeof(BookListPage)},
                 new MenuItem() { Icon = "\uE156", Name = "扫一扫", PageType = typeof(ScanPage)},
             };
             items.Add(Configs.NewInstance().IsGuest()

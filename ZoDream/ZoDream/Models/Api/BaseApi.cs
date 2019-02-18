@@ -54,7 +54,7 @@ namespace ZoDream.Models.Api
             {
                 { "Date", DateTime.Now.ToLongTimeString() },
                 { "Content-Type", "application/vnd.api+json" },
-                { "Accept", "*/*" }
+                { "Accept", "application/json" }
             };
             if (!string.IsNullOrEmpty(Configs.NewInstance().Token))
             {

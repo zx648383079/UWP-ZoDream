@@ -20,7 +20,7 @@
     <Grid>
         <ListView Name="ListView" 
                       
-                      Style="{StaticResource BlogList}" SelectionChanged="ListView_SelectionChanged">
+                      Style="{StaticResource BookChapterList}" SelectionChanged="ListView_SelectionChanged">
             <ListView.Header>
                 <controls:ScrollHeader Mode="QuickReturn">
                     <Grid x:Name="MyHeaderGrid"
