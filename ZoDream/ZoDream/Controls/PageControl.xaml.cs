@@ -124,6 +124,19 @@ namespace ZoDream.Controls
             Page = page;
         }
 
+        public void GoBack()
+        {
+            if (Page > 1)
+            {
+                Page--;
+            }
+        }
+
+        public void GoForward()
+        {
+            Page++;
+        }
+
         private void applyPage()
         {
             if (pager == null)
@@ -153,6 +166,7 @@ namespace ZoDream.Controls
                             (float)(lineIndex * fontHeight)), ColorHelper.FromArgb(255, 0, 0, 0), font);
                     }
                 }
+                
             }
             CanvasControl.Invalidate();
         }
@@ -160,6 +174,18 @@ namespace ZoDream.Controls
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             applyPage();
+        }
+
+        private void UserControl_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var point = e.GetPosition(this);
+            if (point.X > this.ActualWidth / 2)
+            {
+                this.GoForward();
+            } else
+            {
+                this.GoBack(); 
+            }
         }
     }
 }

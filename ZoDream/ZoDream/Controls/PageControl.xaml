@@ -10,7 +10,7 @@
     d:DesignHeight="300"
     d:DesignWidth="400" 
     SizeChanged="UserControl_SizeChanged"
-    
+    Tapped="UserControl_Tapped"
     Unloaded="UserControl_Unloaded">
 
     <Grid>
