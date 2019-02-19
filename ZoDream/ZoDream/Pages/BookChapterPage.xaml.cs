@@ -51,7 +51,9 @@ namespace ZoDream.Pages
             {
                 return;
             }
-            
+            mainPage.Text = chapter.Content;
+            mainPage.Go();
         }
+        
     }
 }
