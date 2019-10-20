@@ -45,7 +45,21 @@ namespace ZoDream.Controls
         // Using a DependencyProperty as the backing store for Text.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TextProperty =
             DependencyProperty.Register("Text", typeof(string), typeof(PageControl), new PropertyMetadata(""));
-        
+
+
+
+        public PageFlipKind FlipKind
+        {
+            get { return (PageFlipKind)GetValue(FlipKindProperty); }
+            set { SetValue(FlipKindProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for FlipKind.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FlipKindProperty =
+            DependencyProperty.Register("FlipKind", typeof(PageFlipKind), typeof(PageControl), new PropertyMetadata(PageFlipKind.None));
+
+
+
         /// <summary>
         /// 行间距
         /// </summary>
@@ -162,6 +176,10 @@ namespace ZoDream.Controls
                     lineIndex++;
                     for (int i = 0; i < item.Lnegth; i++)
                     {
+                        if (item.Start + i >= Text.Length)
+                        {
+                            break;
+                        }
                         ds.DrawText(Text[item.Start + i].ToString(), new Vector2((float)((i + (item.IsNew ? 2 : 0)) * fontWidth),
                             (float)(lineIndex * fontHeight)), ColorHelper.FromArgb(255, 0, 0, 0), font);
                     }
@@ -187,5 +205,12 @@ namespace ZoDream.Controls
                 this.GoBack(); 
             }
         }
+    }
+
+    public enum PageFlipKind
+    {
+        None,
+        Cover,
+        Real
     }
 }

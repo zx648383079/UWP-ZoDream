@@ -46,10 +46,21 @@ namespace ZoDream.Pages
 
         private async void Refresh(uint id)
         {
-            blog = await blogApi.GetBlog(id);
-            BlogContent.NavigateToString(blog.Content);
+            blog = await blogApi.GetBlogAsync(id);
+            if (blog == null)
+            {
+                return;
+            }
+            var data = await blogApi.GetContentAsync(id);
+            BlogContent.NavigateToString(data.Content);
+            TitleTb.Text = blog.Title;
+            AuthorTb.Label = blog.User.Name;
+            TermTb.Label = blog.Term.Name;
+            LangTb.Label = blog.ProgrammingLanguage;
+            TimeTb.Label = blog.CreatedAt;
+            CommentTb.Label = blog.CommentCount.ToString();
+            RemTb.Label = blog.Recommend.ToString();
+            ViewTb.Label = blog.ClickCount.ToString();
         }
-
-
     }
 }

@@ -1,0 +1,21 @@
+﻿<UserControl
+    x:Class="ZoDream.Controls.IconLabel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ZoDream.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    x:Name="root"
+    d:DesignHeight="30"
+    d:DesignWidth="80">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <FontIcon Glyph="{Binding Icon, ElementName=root}"  FontSize="{Binding FontSize, ElementName=root}" VerticalAlignment="Center"/>
+        <TextBlock Text="{Binding Label, ElementName=root}" FontSize="{Binding FontSize, ElementName=root}" Grid.Column="1" VerticalAlignment="Center"/>
+    </Grid>
+</UserControl>

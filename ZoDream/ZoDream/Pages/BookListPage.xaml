@@ -31,9 +31,5 @@
             </ListView>
         </RefreshContainer>
         <ProgressRing x:Name="LoadingRing" Style="{StaticResource Loading}" Grid.Row="1"/>
-        <Button x:Name="MoreBtn" 
-                Tapped="MoreBtn_Tapped"
-                Grid.Row="2" Content="加载更多" 
-                HorizontalAlignment="Stretch"/>
     </Grid>
 </Page>

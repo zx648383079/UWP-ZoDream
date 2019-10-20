@@ -5,15 +5,34 @@
     xmlns:local="using:ZoDream.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:ZoDream.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <WebView
-                 Name="BlogContent"
-                 >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="TitleTb" Grid.ColumnSpan="2"  FontWeight="Bold" VerticalAlignment="Center" FontSize="18" HorizontalAlignment="Center"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2">
+            <controls:IconLabel x:Name="AuthorTb" Icon="&#xE104;" FontSize="12" Grid.Column="2" Grid.Row="2" Margin="0,0,20,0"/>
+            <controls:IconLabel x:Name="TermTb" Icon="&#xE1CB;" FontSize="12" Grid.Column="2" Grid.Row="2" Margin="0,0,20,0"/>
+            <controls:IconLabel x:Name="LangTb" Icon="&#xE756;" FontSize="12" Grid.Column="2" Grid.Row="2" Margin="0,0,20,0"/>
+            <controls:IconLabel  x:Name="TimeTb" Icon="&#xE163;"  FontSize="12" Grid.Column="2" Grid.Row="2" Margin="0,0,20,0"/>
+        </StackPanel>
+        <WebView Name="BlogContent" Grid.Row="2" Grid.ColumnSpan="2">
         </WebView>
-
-
+        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.ColumnSpan="2">
+            <controls:IconLabel x:Name="CommentTb" Icon="&#xE25C;" FontSize="18" Grid.Column="2" Grid.Row="2" Margin="0,0,20,0"/>
+            <controls:IconLabel x:Name="ViewTb" Icon="&#xE18B;" FontSize="18" Grid.Column="2" Grid.Row="2" Margin="0,0,20,0"/>
+         </StackPanel>
+        <controls:IconLabel  x:Name="RemTb" Icon="&#xE209;" FontSize="18" Grid.Column="1" Grid.Row="3"/>
     </Grid>
 </Page>

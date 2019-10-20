@@ -22,10 +22,10 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <RefreshContainer x:Name="RefreshContainer" RefreshRequested="RefreshContainer_RefreshRequested" 
+        <RefreshContainer x:Name="RefreshContainer" 
+                          RefreshRequested="RefreshContainer_RefreshRequested" 
                           >
-            <ListView Name="ListView" 
-                      
+            <ListView Name="ListView"
                       Style="{StaticResource BlogList}" SelectionChanged="ListView_SelectionChanged">
                 <ListView.Header>
                     <controls:ScrollHeader Mode="QuickReturn">
@@ -53,9 +53,5 @@
             </ListView>
         </RefreshContainer>
         <ProgressRing x:Name="LoadingRing" Style="{StaticResource Loading}"/>
-        <Button x:Name="MoreBtn" 
-                Tapped="MoreBtn_Tapped"
-                Grid.Row="1" Content="加载更多" 
-                HorizontalAlignment="Stretch"/>
     </Grid>
 </Page>

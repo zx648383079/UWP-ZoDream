@@ -21,9 +21,14 @@ namespace ZoDream.Models.Api
             return Tuple.Create(data.Data, data.Paging.More);
         }
 
-        public async Task<Blog> GetBlog(uint id)
+        public async Task<Blog> GetBlogAsync(uint id)
         {
             return await GetAsync<Blog>($"blog?id={id}");
+        }
+
+        public async Task<Blog> GetContentAsync(uint id)
+        {
+            return await GetAsync<Blog>($"blog/home/content?id={id}");
         }
     }
 }

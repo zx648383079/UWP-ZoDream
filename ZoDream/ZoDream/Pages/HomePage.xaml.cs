@@ -29,7 +29,7 @@ namespace ZoDream.Pages
     {
         private IncrementalLoadingCollection<Blog> Blogs;
 
-        private uint page = 1;
+        private uint page = 0;
 
         private BlogApi blogApi = new BlogApi();
 
@@ -39,8 +39,11 @@ namespace ZoDream.Pages
         {
             this.InitializeComponent();
             Blogs = new IncrementalLoadingCollection<Blog>(count => {
-                Log.Info(count);
-                return blogApi.GetListAsync(page = count);
+                return Task.Run(async () =>
+                {
+                    page++;
+                    return await blogApi.GetListAsync(page);
+                });
             });
             ListView.ItemsSource = Blogs;
         }
@@ -55,8 +58,8 @@ namespace ZoDream.Pages
         private async void Refresh()
         {
             Blogs.Clear();
-            page = 1;
-            await Fetch(page);
+            page = 0;
+            await Blogs.LoadMoreItemsAsync(20);
         }
 
         private async Task Fetch(uint page)
@@ -71,7 +74,6 @@ namespace ZoDream.Pages
                     Blogs.Add(blog);
                 }
             }
-            MoreBtn.Visibility = data.Item2 ? Visibility.Visible : Visibility.Collapsed;
             LoadingRing.IsActive = false;
         }
 
@@ -87,11 +89,6 @@ namespace ZoDream.Pages
                 Blog.PageTitle = blog.Title;
                 Frame.Navigate(typeof(BlogPage), blog.Id);
             };
-        }
-
-        private void MoreBtn_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            Fetch(++page);
         }
     }
 }

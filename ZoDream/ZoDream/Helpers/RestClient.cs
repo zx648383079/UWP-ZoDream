@@ -182,6 +182,7 @@ namespace ZoDream.Helpers
             }
             ExtractHeaders(requestMessage);
             requestMessage.RequestUri = new Uri(uri, AddQeuryString());
+            Log.Info($"uri:{requestMessage.RequestUri}");
             try
             {
                 var responseMessage = await httpClient.SendAsync(requestMessage).ConfigureAwait(false);
